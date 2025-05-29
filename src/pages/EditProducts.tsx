@@ -19,12 +19,22 @@ export default function EditProducts() {
                     <li key={p.key_unique}>
                         <strong>ID:</strong> {p.id} <br />
                         <strong>Nombre:</strong> {p.nombre} <br />
-                        <strong>Clave:</strong> {p.clave} <br />
-                        <strong>Unidad de medida:</strong> {p.unidad_medida} <br />
-                        {/* <strong>Precio sugerido:</strong> ${p.precio_sugerido.toFixed(2)} <br /> */}
-                        {/* <strong>Precio actual:</strong> ${p.precio_actual.toFixed(2)} <br /> */}
+                        {/* <strong>Clave:</strong> {p.clave} <br /> */}
+                        {p.unidad_medida && (
+                            <>
+                                <strong>Unidad de medida:</strong> {p.unidad_medida} <br />
+                            </>
+                        )}
+                        <strong>Precio sugerido:</strong> ${p.precio_sugerido.toFixed(2)} <br />
+                        <strong>Precio actual:</strong> ${p.precio_actual.toFixed(2)} <br />
                         <strong>Inventario actual:</strong> {p.inventario_actual} <br />
                         <strong>Categoría:</strong> {p.categoria || 'N/A'} <br />
+                        <strong>Marca:</strong> {p.marca || 'N/A'} <br />
+                        {p.impuesto && (
+                            <>
+                                <strong>Impuesto SAT:</strong> {p.impuesto} <br />
+                            </>
+                        )}
                         <strong>Inventario original:</strong> {p.inventario_original} <br />
                         <strong>Modificado:</strong> {p.modificado ? 'Sí' : 'No'} <br />
                     </li>
