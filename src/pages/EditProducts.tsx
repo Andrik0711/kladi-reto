@@ -422,9 +422,42 @@ export default function EditProducts() {
                         onRowsPerPageChange={handleChangeRowsPerPage}
                         labelRowsPerPage={<span>Filas por página:</span>}
                     />
+                    {/* Botón para revertir todos los cambios */}
+                    <Box
+                        sx={{
+                            display: 'flex',
+                            justifyContent: 'center',
+                            py: 3,
+                            bgcolor: 'transparent',
+                        }}
+                    >
+                        <Button
+                            variant="outlined"
+                            color="warning"
+                            size="large"
+                            sx={{
+                                borderRadius: 3,
+                                fontWeight: 700,
+                                px: 4,
+                                boxShadow: '0 2px 8px 0 rgba(31, 38, 135, 0.08)',
+                            }}
+                            onClick={() => {
+                                setProducts(
+                                    products.map((p) => ({
+                                        ...p,
+                                        precio_actual: p.precio_sugerido,
+                                        inventario_actual: p.inventario_original,
+                                        modificado: false,
+                                    })),
+                                );
+                            }}
+                        >
+                            Revertir todos los cambios
+                        </Button>
+                    </Box>
                 </Paper>
 
-                {/* Modal de filtros avanzados innovador */}
+                {/* Modal de filtros avanzados */}
                 <Dialog
                     open={openFilters}
                     onClose={() => setOpenFilters(false)}
