@@ -289,14 +289,30 @@ export default function EditProducts() {
                                             />
                                         </TableCell>
                                         <TableCell>
-                                            <Chip
-                                                label={`${product.inventario_actual} unidades`}
+                                            <TextField
+                                                type="number"
+                                                value={product.inventario_actual}
+                                                onChange={(e) => {
+                                                    const newInv = Number(e.target.value) || 0;
+                                                    setProducts(
+                                                        products.map((p: Product) =>
+                                                            p.key_unique === product.key_unique
+                                                                ? {
+                                                                      ...p,
+                                                                      inventario_actual: newInv,
+                                                                      modificado:
+                                                                          product.precio_actual !==
+                                                                              product.precio_sugerido ||
+                                                                          newInv !== product.inventario_original,
+                                                                  }
+                                                                : p,
+                                                        ),
+                                                    );
+                                                }}
+                                                variant="outlined"
                                                 size="small"
-                                                color={
-                                                    product.inventario_actual < 5
-                                                        ? 'error'
-                                                        : 'default'
-                                                }
+                                                sx={{ width: 100, fontFamily: 'monospace' }}
+                                                inputProps={{ step: '1', min: '0' }}
                                             />
                                         </TableCell>
                                         <TableCell align="center">
@@ -352,13 +368,18 @@ export default function EditProducts() {
                         </Table>
                     </TableContainer>
                     <TablePagination
-                        rowsPerPageOptions={[8, 16, 24]}
+                        rowsPerPageOptions={[4, 8, 16, 24, 50]}
                         component="div"
                         count={filteredProducts.length}
                         rowsPerPage={rowsPerPage}
                         page={page}
                         onPageChange={handleChangePage}
                         onRowsPerPageChange={handleChangeRowsPerPage}
+                        labelRowsPerPage={
+                            <span>
+                                Filas por página:
+                            </span>
+                        }
                     />
                 </Paper>
             </Container>
