@@ -24,12 +24,18 @@ import {
     TablePagination,
     useTheme,
     Stack,
+    Dialog,
+    DialogTitle,
+    DialogContent,
+    DialogActions,
+    Slider,
 } from '@mui/material';
 import {
     Search as SearchIcon,
     FilterList as FilterIcon,
     Edit as EditIcon,
 } from '@mui/icons-material';
+import CloseIcon from '@mui/icons-material/Close';
 import { useProductContext } from '../context/ProductContext';
 import type { Product } from '../types/Product';
 
@@ -40,6 +46,15 @@ export default function EditProducts() {
     const [showOnlyEdited, setShowOnlyEdited] = useState(false);
     const [page, setPage] = useState(0);
     const [rowsPerPage, setRowsPerPage] = useState(8);
+    const [openFilters, setOpenFilters] = useState(false);
+    const [priceRange, setPriceRange] = useState<number[]>([0, 1000]);
+    const [invRange, setInvRange] = useState<number[]>([0, 100]);
+
+    // Encuentra los valores min/max para sliders
+    const minPrecio = Math.min(...products.map((p) => p.precio_sugerido), 0);
+    const maxPrecio = Math.max(...products.map((p) => p.precio_sugerido), 1000);
+    const minInv = Math.min(...products.map((p) => p.inventario_actual), 0);
+    const maxInv = Math.max(...products.map((p) => p.inventario_actual), 100);
 
     // Filtros y búsqueda
     const filteredProducts = useMemo(() => {
@@ -48,9 +63,14 @@ export default function EditProducts() {
                 product.nombre.toLowerCase().includes(searchTerm.toLowerCase()) ||
                 product.clave.toLowerCase().includes(searchTerm.toLowerCase());
             const matchesEditFilter = !showOnlyEdited || product.modificado;
-            return matchesSearch && matchesEditFilter;
+            const matchesPrice =
+                product.precio_sugerido >= priceRange[0] &&
+                product.precio_sugerido <= priceRange[1];
+            const matchesInv =
+                product.inventario_actual >= invRange[0] && product.inventario_actual <= invRange[1];
+            return matchesSearch && matchesEditFilter && matchesPrice && matchesInv;
         });
-    }, [products, searchTerm, showOnlyEdited]);
+    }, [products, searchTerm, showOnlyEdited, priceRange, invRange]);
 
     // Paginación
     const paginatedProducts = filteredProducts.slice(
@@ -150,7 +170,14 @@ export default function EditProducts() {
                                 width: { xs: '100%', md: 'auto' },
                             }}
                         >
-                            <Button variant="outlined" color="primary" startIcon={<FilterIcon />}>
+                            {/* Botón de filtros avanzados más simple */}
+                            <Button
+                                variant="outlined"
+                                color="primary"
+                                startIcon={<FilterIcon />}
+                                onClick={() => setOpenFilters(true)}
+                                sx={{ fontWeight: 600, borderRadius: 2 }}
+                            >
                                 Filtros avanzados
                             </Button>
                         </Box>
@@ -375,6 +402,150 @@ export default function EditProducts() {
                         labelRowsPerPage={<span>Filas por página:</span>}
                     />
                 </Paper>
+
+                {/* Modal de filtros avanzados innovador */}
+                <Dialog
+                    open={openFilters}
+                    onClose={() => setOpenFilters(false)}
+                    maxWidth="xs"
+                    fullWidth
+                    PaperProps={{
+                        sx: {
+                            background: 'rgb(255, 255, 255)',
+                            backdropFilter: 'blur(12px)',
+                            borderRadius: 4,
+                            boxShadow: '0 8px 32px 0 rgba(31, 38, 135, 0.18)',
+                            border: '1px solid rgba(255, 255, 255, 0.92)',
+                        },
+                    }}
+                >
+                    <DialogTitle
+                        sx={{
+                            fontWeight: 700,
+                            fontSize: 22,
+                            pb: 1,
+                            display: 'flex',
+                            alignItems: 'center',
+                            gap: 1,
+                        }}
+                    >
+                        <FilterIcon color="primary" sx={{ mr: 1, fontSize: 28 }} />
+                        Filtros avanzados
+                        <Tooltip title="Cerrar">
+                            <span>
+                                <Button
+                                    onClick={() => setOpenFilters(false)}
+                                    sx={{ ml: 'auto', minWidth: 0, p: 0.5 }}
+                                    color="inherit"
+                                >
+                                    <CloseIcon />
+                                </Button>
+                            </span>
+                        </Tooltip>
+                    </DialogTitle>
+                    <DialogContent dividers sx={{ p: 3 }}>
+                        <Stack spacing={3}>
+                            <Box>
+                                <Typography gutterBottom fontWeight={600} sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+                                    <img src="https://cdn.jsdelivr.net/gh/twitter/twemoji@14.0.2/assets/svg/1f4b0.svg" alt="Precio" width={22} style={{ verticalAlign: 'middle' }} />
+                                    Rango de precio sugerido
+                                    <Tooltip title="Filtra productos por su precio sugerido. Mueve los extremos para ajustar el rango.">
+                                        <Box component="span" sx={{ ml: 1, color: 'primary.main', cursor: 'help', fontWeight: 700 }}>?</Box>
+                                    </Tooltip>
+                                </Typography>
+                                <Slider
+                                    value={priceRange}
+                                    min={minPrecio}
+                                    max={maxPrecio}
+                                    onChange={(_event: Event, v: number | number[]) => setPriceRange(v as number[])}
+                                    valueLabelDisplay="auto"
+                                    step={1}
+                                    sx={{
+                                        color: 'primary.main',
+                                        height: 6,
+                                        '& .MuiSlider-thumb': {
+                                            boxShadow: '0 2px 8px rgba(0,0,0,0.12)',
+                                            background: '#fff',
+                                            border: '2px solid',
+                                            borderColor: 'primary.main',
+                                        },
+                                    }}
+                                />
+                                <Stack direction="row" justifyContent="space-between" sx={{ mt: 0.5 }}>
+                                    <Typography variant="caption" color="text.secondary">
+                                        Mín: ${minPrecio}
+                                    </Typography>
+                                    <Typography variant="caption" color="text.secondary">
+                                        Máx: ${maxPrecio}
+                                    </Typography>
+                                </Stack>
+                            </Box>
+                            <Box>
+                                <Typography gutterBottom fontWeight={600} sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+                                    <img src="https://cdn.jsdelivr.net/gh/twitter/twemoji@14.0.2/assets/svg/1f4e6.svg" alt="Inventario" width={22} style={{ verticalAlign: 'middle' }} />
+                                    Rango de inventario
+                                    <Tooltip title="Filtra productos por inventario actual. Ajusta el rango según tus necesidades.">
+                                        <Box component="span" sx={{ ml: 1, color: 'primary.main', cursor: 'help', fontWeight: 700 }}>?</Box>
+                                    </Tooltip>
+                                </Typography>
+                                <Slider
+                                    value={invRange}
+                                    min={minInv}
+                                    max={maxInv}
+                                    onChange={(_event: Event, v: number | number[]) => setInvRange(v as number[])}
+                                    valueLabelDisplay="auto"
+                                    step={1}
+                                    sx={{
+                                        color: 'success.main',
+                                        height: 6,
+                                        '& .MuiSlider-thumb': {
+                                            boxShadow: '0 2px 8px rgba(0,0,0,0.12)',
+                                            background: '#fff',
+                                            border: '2px solid',
+                                            borderColor: 'success.main',
+                                        },
+                                    }}
+                                />
+                                <Stack direction="row" justifyContent="space-between" sx={{ mt: 0.5 }}>
+                                    <Typography variant="caption" color="text.secondary">
+                                        Mín: {minInv}
+                                    </Typography>
+                                    <Typography variant="caption" color="text.secondary">
+                                        Máx: {maxInv}
+                                    </Typography>
+                                </Stack>
+                            </Box>
+                        </Stack>
+                        <Box sx={{ mt: 3, textAlign: 'center' }}>
+                            <Typography variant="body2" color="text.secondary">
+                                Los filtros se aplican automáticamente al mover los sliders.
+                            </Typography>
+                        </Box>
+                    </DialogContent>
+                    <DialogActions sx={{ px: 3, pb: 2, pt: 1, justifyContent: 'space-between' }}>
+                        <Button
+                            onClick={() => {
+                                setPriceRange([minPrecio, maxPrecio]);
+                                setInvRange([minInv, maxInv]);
+                            }}
+                            color="secondary"
+                            variant="outlined"
+                            startIcon={<FilterIcon />}
+                            sx={{ borderRadius: 2, fontWeight: 600 }}
+                        >
+                            Reiniciar filtrado
+                        </Button>
+                        <Button
+                            onClick={() => setOpenFilters(false)}
+                            color="primary"
+                            variant="contained"
+                            startIcon={<CloseIcon />}
+                            sx={{ borderRadius: 2, fontWeight: 600 }}
+                        >
+                            Cerrar
+                        </Button>
+                    </DialogActions>
+                </Dialog>
             </Container>
         </Box>
     );
