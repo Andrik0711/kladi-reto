@@ -117,6 +117,8 @@ kladi-ferreteria/
 │   │   └── SummaryModal.test.tsx   # Pruebas unitarias del modal
 │   ├── api/
 │   │   └── kladiApi.ts         # Cliente Axios para API de Kladi
+│   ├── adapters/
+│   │   └── productAdapters.ts   # Sanitización de datos de productos
 │   ├── components/
 │   │   ├── ProductTable.tsx    # Tabla editable de productos
 │   │   ├── ProductFilters.tsx  # Barra de búsqueda y filtro modificado
