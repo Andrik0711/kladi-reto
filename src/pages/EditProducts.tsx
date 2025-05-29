@@ -35,6 +35,8 @@ import {
     Search as SearchIcon,
     FilterList as FilterIcon,
     Edit as EditIcon,
+    Info as InfoIcon,
+    // ListOutlined as ListIcon,
 } from '@mui/icons-material';
 import CloseIcon from '@mui/icons-material/Close';
 import { useProductContext } from '../context/ProductContext';
@@ -50,6 +52,7 @@ export default function EditProducts() {
     const [openFilters, setOpenFilters] = useState(false);
     const [priceRange, setPriceRange] = useState<number[]>([0, 1000]);
     const [invRange, setInvRange] = useState<number[]>([0, 100]);
+    const [openSummary, setOpenSummary] = useState(false);
 
     // Encuentra los valores min/max para sliders
     const minPrecio = Math.min(...products.map((p) => p.precio_sugerido), 0);
@@ -111,6 +114,24 @@ export default function EditProducts() {
             ),
         );
     };
+
+    // Guardar cambios en localStorage al confirmar
+    const handleConfirmSummary = () => {
+        localStorage.setItem('kladi-cambios', JSON.stringify(productChanges));
+        setOpenSummary(false);
+    };
+
+    // Limpiar localStorage al recargar
+    React.useEffect(() => {
+        window.addEventListener('beforeunload', () => {
+            localStorage.removeItem('kladi-cambios');
+        });
+        return () => {
+            window.removeEventListener('beforeunload', () => {
+                localStorage.removeItem('kladi-cambios');
+            });
+        };
+    }, []);
 
     return (
         <Box
@@ -426,7 +447,10 @@ export default function EditProducts() {
                     <Box
                         sx={{
                             display: 'flex',
+                            flexDirection: { xs: 'column', sm: 'row' },
                             justifyContent: 'center',
+                            alignItems: 'center',
+                            gap: 2,
                             py: 3,
                             bgcolor: 'transparent',
                         }}
@@ -450,9 +474,25 @@ export default function EditProducts() {
                                         modificado: false,
                                     })),
                                 );
+                                localStorage.removeItem('kladi-cambios');
                             }}
                         >
                             Revertir todos los cambios
+                        </Button>
+                        <Button
+                            variant="contained"
+                            color="primary"
+                            size="large"
+                            sx={{
+                                borderRadius: 3,
+                                fontWeight: 700,
+                                px: 4,
+                                boxShadow: '0 2px 8px 0 rgba(31, 38, 135, 0.10)',
+                            }}
+                            onClick={() => setOpenSummary(true)}
+                            disabled={productChanges.length === 0}
+                        >
+                            Finalizar cambios
                         </Button>
                     </Box>
                 </Paper>
@@ -647,6 +687,136 @@ export default function EditProducts() {
                             sx={{ borderRadius: 2, fontWeight: 600 }}
                         >
                             Cerrar
+                        </Button>
+                    </DialogActions>
+                </Dialog>
+
+                {/* Modal de resumen de cambios */}
+                <Dialog
+                    open={openSummary}
+                    onClose={() => setOpenSummary(false)}
+                    maxWidth="sm"
+                    fullWidth
+                    PaperProps={{
+                        sx: {
+                            background: 'rgba(255,255,255,0.85)',
+                            backdropFilter: 'blur(16px)',
+                            borderRadius: 4,
+                            boxShadow: '0 8px 32px 0 rgba(31, 38, 135, 0.18)',
+                            border: '1px solid rgba(255,255,255,0.18)',
+                        },
+                    }}
+                >
+                    <DialogTitle
+                        sx={{
+                            fontWeight: 700,
+                            fontSize: 22,
+                            pb: 1,
+                            display: 'flex',
+                            alignItems: 'center',
+                            gap: 1,
+                        }}
+                    >
+                        <InfoIcon color="primary" sx={{ mr: 1, fontSize: 28 }} />
+                        Resumen de cambios realizados
+                        <Tooltip title="Cerrar">
+                            <span>
+                                <Button
+                                    onClick={() => setOpenSummary(false)}
+                                    sx={{ ml: 'auto', minWidth: 0, p: 0.5 }}
+                                    color="inherit"
+                                >
+                                    <CloseIcon />
+                                </Button>
+                            </span>
+                        </Tooltip>
+                    </DialogTitle>
+                    <DialogContent dividers sx={{ p: 3 }}>
+                        {productChanges.length === 0 ? (
+                            <Typography color="text.secondary" align="center">
+                                No hay cambios para mostrar.
+                            </Typography>
+                        ) : (
+                            <Stack spacing={2}>
+                                {productChanges.map((p) => (
+                                    <Paper
+                                        key={p.key_unique}
+                                        elevation={1}
+                                        sx={{
+                                            p: 2,
+                                            borderRadius: 3,
+                                            display: 'flex',
+                                            alignItems: 'center',
+                                            gap: 2,
+                                            background: 'rgba(255,255,255,0.7)',
+                                            boxShadow: '0 1px 6px 0 rgba(255,193,7,0.08)',
+                                        }}
+                                    >
+                                        <img
+                                            src="https://cdn.jsdelivr.net/gh/twitter/twemoji@14.0.2/assets/svg/1f4e6.svg"
+                                            alt="Inventario"
+                                            width={22}
+                                            style={{ verticalAlign: 'middle' }}
+                                        />
+                                        <Box flex={1}>
+                                            <Typography fontWeight={700}>{p.nombre}</Typography>
+                                            <Typography variant="body2" color="text.secondary">
+                                                {p.categoria} | {p.marca}
+                                            </Typography>
+                                        </Box>
+                                        <Box textAlign="right">
+                                            <Typography variant="body2" color="text.secondary">
+                                                Precio: <b>${p.precio_actual.toFixed(2)}</b>{' '}
+                                                {p.precio_actual !== p.precio_sugerido && (
+                                                    <>
+                                                        <span
+                                                            style={{
+                                                                color: '#ffa751',
+                                                                fontWeight: 700,
+                                                            }}
+                                                        >
+                                                            (antes ${p.precio_sugerido.toFixed(2)})
+                                                        </span>
+                                                    </>
+                                                )}
+                                            </Typography>
+                                            <Typography variant="body2" color="text.secondary">
+                                                Inventario: <b>{p.inventario_actual}</b>{' '}
+                                                {p.inventario_actual !== p.inventario_original && (
+                                                    <>
+                                                        <span
+                                                            style={{
+                                                                color: '#ffa751',
+                                                                fontWeight: 700,
+                                                            }}
+                                                        >
+                                                            (antes {p.inventario_original})
+                                                        </span>
+                                                    </>
+                                                )}
+                                            </Typography>
+                                        </Box>
+                                    </Paper>
+                                ))}
+                            </Stack>
+                        )}
+                    </DialogContent>
+                    <DialogActions sx={{ px: 3, pb: 2, pt: 1, justifyContent: 'flex-end' }}>
+                        <Button
+                            onClick={() => setOpenSummary(false)}
+                            color="inherit"
+                            variant="outlined"
+                            sx={{ borderRadius: 2, fontWeight: 600 }}
+                        >
+                            Regresar
+                        </Button>
+                        <Button
+                            onClick={handleConfirmSummary}
+                            color="primary"
+                            variant="contained"
+                            sx={{ borderRadius: 2, fontWeight: 600 }}
+                        >
+                            Confirmar
                         </Button>
                     </DialogActions>
                 </Dialog>
