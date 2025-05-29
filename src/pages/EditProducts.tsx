@@ -150,11 +150,7 @@ export default function EditProducts() {
                                 width: { xs: '100%', md: 'auto' },
                             }}
                         >
-                            <Button
-                                variant="outlined"
-                                color="primary"
-                                startIcon={<FilterIcon />}
-                            >
+                            <Button variant="outlined" color="primary" startIcon={<FilterIcon />}>
                                 Filtros avanzados
                             </Button>
                         </Box>
@@ -303,7 +299,8 @@ export default function EditProducts() {
                                                                       modificado:
                                                                           product.precio_actual !==
                                                                               product.precio_sugerido ||
-                                                                          newInv !== product.inventario_original,
+                                                                          newInv !==
+                                                                              product.inventario_original,
                                                                   }
                                                                 : p,
                                                         ),
@@ -375,11 +372,7 @@ export default function EditProducts() {
                         page={page}
                         onPageChange={handleChangePage}
                         onRowsPerPageChange={handleChangeRowsPerPage}
-                        labelRowsPerPage={
-                            <span>
-                                Filas por página:
-                            </span>
-                        }
+                        labelRowsPerPage={<span>Filas por página:</span>}
                     />
                 </Paper>
             </Container>
