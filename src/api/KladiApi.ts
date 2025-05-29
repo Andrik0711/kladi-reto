@@ -4,6 +4,7 @@
  * usando axios para realizar las peticiones.
  */
 import axios from 'axios';
+import { sanitizeProducts } from '../adapters/productAdapters';
 
 const kladiApi = axios.create({
     baseURL: 'https://catalogo-kladi.dev.rombo.microsipnube.com/',
@@ -14,5 +15,6 @@ export const fetchProducts = async () => {
     if (response.status !== 200) {
         throw new Error('Error fetching products');
     }
-    return response.data;
+    // Sanitizar los productos antes de retornarlos
+    return sanitizeProducts(response.data.__ITEMS__);
 };
