@@ -29,6 +29,7 @@ import {
     DialogContent,
     DialogActions,
     Slider,
+    Switch,
 } from '@mui/material';
 import {
     Search as SearchIcon,
@@ -67,7 +68,8 @@ export default function EditProducts() {
                 product.precio_sugerido >= priceRange[0] &&
                 product.precio_sugerido <= priceRange[1];
             const matchesInv =
-                product.inventario_actual >= invRange[0] && product.inventario_actual <= invRange[1];
+                product.inventario_actual >= invRange[0] &&
+                product.inventario_actual <= invRange[1];
             return matchesSearch && matchesEditFilter && matchesPrice && matchesInv;
         });
     }, [products, searchTerm, showOnlyEdited, priceRange, invRange]);
@@ -151,15 +153,34 @@ export default function EditProducts() {
                                     variant="outlined"
                                     size="small"
                                 />
-                                <Button
-                                    variant={showOnlyEdited ? 'contained' : 'outlined'}
-                                    color="primary"
-                                    onClick={() => setShowOnlyEdited((v) => !v)}
-                                    startIcon={<EditIcon />}
-                                    sx={{ whiteSpace: 'nowrap' }}
+                                {/* Switch para mostrar solo editados */}
+                                <Box
+                                    sx={{ display: 'flex', alignItems: 'center', gap: 1.5, pl: 1 }}
                                 >
-                                    {showOnlyEdited ? 'Ver todos' : 'Solo editados'}
-                                </Button>
+                                    <Switch
+                                        checked={showOnlyEdited}
+                                        onChange={() => setShowOnlyEdited((v) => !v)}
+                                        color="warning"
+                                        inputProps={{
+                                            'aria-label': 'Mostrar solo productos editados',
+                                        }}
+                                        sx={{
+                                            '& .MuiSwitch-thumb': {
+                                                boxShadow: '0 2px 8px rgba(255,193,7,0.18)',
+                                            },
+                                            '& .Mui-checked': {
+                                                color: theme.palette.warning.main,
+                                            },
+                                        }}
+                                    />
+                                    <Typography
+                                        variant="body2"
+                                        color={showOnlyEdited ? 'warning.main' : 'text.secondary'}
+                                        fontWeight={600}
+                                    >
+                                        Solo editados
+                                    </Typography>
+                                </Box>
                             </Box>
                         </Box>
                         <Box
@@ -170,7 +191,7 @@ export default function EditProducts() {
                                 width: { xs: '100%', md: 'auto' },
                             }}
                         >
-                            {/* Botón de filtros avanzados más simple */}
+                            {/* Botón de filtros avanzados */}
                             <Button
                                 variant="outlined"
                                 color="primary"
@@ -446,18 +467,39 @@ export default function EditProducts() {
                     <DialogContent dividers sx={{ p: 3 }}>
                         <Stack spacing={3}>
                             <Box>
-                                <Typography gutterBottom fontWeight={600} sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
-                                    <img src="https://cdn.jsdelivr.net/gh/twitter/twemoji@14.0.2/assets/svg/1f4b0.svg" alt="Precio" width={22} style={{ verticalAlign: 'middle' }} />
+                                <Typography
+                                    gutterBottom
+                                    fontWeight={600}
+                                    sx={{ display: 'flex', alignItems: 'center', gap: 1 }}
+                                >
+                                    <img
+                                        src="https://cdn.jsdelivr.net/gh/twitter/twemoji@14.0.2/assets/svg/1f4b0.svg"
+                                        alt="Precio"
+                                        width={22}
+                                        style={{ verticalAlign: 'middle' }}
+                                    />
                                     Rango de precio sugerido
                                     <Tooltip title="Filtra productos por su precio sugerido. Mueve los extremos para ajustar el rango.">
-                                        <Box component="span" sx={{ ml: 1, color: 'primary.main', cursor: 'help', fontWeight: 700 }}>?</Box>
+                                        <Box
+                                            component="span"
+                                            sx={{
+                                                ml: 1,
+                                                color: 'primary.main',
+                                                cursor: 'help',
+                                                fontWeight: 700,
+                                            }}
+                                        >
+                                            ?
+                                        </Box>
                                     </Tooltip>
                                 </Typography>
                                 <Slider
                                     value={priceRange}
                                     min={minPrecio}
                                     max={maxPrecio}
-                                    onChange={(_event: Event, v: number | number[]) => setPriceRange(v as number[])}
+                                    onChange={(_event: Event, v: number | number[]) =>
+                                        setPriceRange(v as number[])
+                                    }
                                     valueLabelDisplay="auto"
                                     step={1}
                                     sx={{
@@ -471,7 +513,11 @@ export default function EditProducts() {
                                         },
                                     }}
                                 />
-                                <Stack direction="row" justifyContent="space-between" sx={{ mt: 0.5 }}>
+                                <Stack
+                                    direction="row"
+                                    justifyContent="space-between"
+                                    sx={{ mt: 0.5 }}
+                                >
                                     <Typography variant="caption" color="text.secondary">
                                         Mín: ${minPrecio}
                                     </Typography>
@@ -481,18 +527,39 @@ export default function EditProducts() {
                                 </Stack>
                             </Box>
                             <Box>
-                                <Typography gutterBottom fontWeight={600} sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
-                                    <img src="https://cdn.jsdelivr.net/gh/twitter/twemoji@14.0.2/assets/svg/1f4e6.svg" alt="Inventario" width={22} style={{ verticalAlign: 'middle' }} />
+                                <Typography
+                                    gutterBottom
+                                    fontWeight={600}
+                                    sx={{ display: 'flex', alignItems: 'center', gap: 1 }}
+                                >
+                                    <img
+                                        src="https://cdn.jsdelivr.net/gh/twitter/twemoji@14.0.2/assets/svg/1f4e6.svg"
+                                        alt="Inventario"
+                                        width={22}
+                                        style={{ verticalAlign: 'middle' }}
+                                    />
                                     Rango de inventario
                                     <Tooltip title="Filtra productos por inventario actual. Ajusta el rango según tus necesidades.">
-                                        <Box component="span" sx={{ ml: 1, color: 'primary.main', cursor: 'help', fontWeight: 700 }}>?</Box>
+                                        <Box
+                                            component="span"
+                                            sx={{
+                                                ml: 1,
+                                                color: 'primary.main',
+                                                cursor: 'help',
+                                                fontWeight: 700,
+                                            }}
+                                        >
+                                            ?
+                                        </Box>
                                     </Tooltip>
                                 </Typography>
                                 <Slider
                                     value={invRange}
                                     min={minInv}
                                     max={maxInv}
-                                    onChange={(_event: Event, v: number | number[]) => setInvRange(v as number[])}
+                                    onChange={(_event: Event, v: number | number[]) =>
+                                        setInvRange(v as number[])
+                                    }
                                     valueLabelDisplay="auto"
                                     step={1}
                                     sx={{
@@ -506,7 +573,11 @@ export default function EditProducts() {
                                         },
                                     }}
                                 />
-                                <Stack direction="row" justifyContent="space-between" sx={{ mt: 0.5 }}>
+                                <Stack
+                                    direction="row"
+                                    justifyContent="space-between"
+                                    sx={{ mt: 0.5 }}
+                                >
                                     <Typography variant="caption" color="text.secondary">
                                         Mín: {minInv}
                                     </Typography>
