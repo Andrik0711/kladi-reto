@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
-import { DataGrid, GridColDef, GridRenderCellParams } from '@mui/x-data-grid';
+import { DataGrid } from '@mui/x-data-grid';
+import type { GridColDef, GridRenderCellParams } from '@mui/x-data-grid';
 import { Paper, Box, Typography, LinearProgress } from '@mui/material';
 import type { Product } from '../types/Product';
 
@@ -17,14 +18,14 @@ const columns: GridColDef[] = [
         headerName: 'Precio Sugerido',
         width: 140,
         type: 'number',
-        valueFormatter: ({ value }) => `$${value?.toFixed(2)}`,
+        valueFormatter: ({ value }) => `$${(value as number)?.toFixed(2)}`,
     },
     {
         field: 'precio_actual',
         headerName: 'Precio Actual',
         width: 140,
         type: 'number',
-        valueFormatter: ({ value }) => `$${value?.toFixed(2)}`,
+        valueFormatter: ({ value }) => `$${(value as number)?.toFixed(2)}`,
     },
     { field: 'inventario_actual', headerName: 'Inventario', width: 120, type: 'number' },
     { field: 'categoria', headerName: 'Categoría', width: 140 },

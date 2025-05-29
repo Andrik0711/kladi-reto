@@ -23,7 +23,7 @@ import {
     TableRow,
     TablePagination,
     useTheme,
-    Grid,
+    Stack,
 } from '@mui/material';
 import {
     Search as SearchIcon,
@@ -107,8 +107,8 @@ export default function EditProducts() {
             <Container maxWidth="xl" disableGutters sx={{ py: 4, bgcolor: 'transparent' }}>
                 {/* Filtros */}
                 <Paper elevation={2} sx={{ p: 3, mb: 3, borderRadius: 2, background: '#fff' }}>
-                    <Grid container spacing={2} alignItems="center">
-                        <Grid item xs={12} md={8}>
+                    <Stack direction={{ xs: 'column', md: 'row' }} spacing={2} alignItems="center">
+                        <Box flex={1}>
                             <Box
                                 sx={{
                                     display: 'flex',
@@ -141,29 +141,29 @@ export default function EditProducts() {
                                     {showOnlyEdited ? 'Ver todos' : 'Solo editados'}
                                 </Button>
                             </Box>
-                        </Grid>
-                        <Grid
-                            item
-                            xs={12}
-                            md={4}
-                            sx={{ display: 'flex', justifyContent: { md: 'flex-end' } }}
+                        </Box>
+                        <Box
+                            sx={{
+                                display: 'flex',
+                                gap: 2,
+                                justifyContent: { md: 'flex-end' },
+                                width: { xs: '100%', md: 'auto' },
+                            }}
                         >
-                            <Box sx={{ display: 'flex', gap: 2 }}>
-                                <Button
-                                    variant="outlined"
-                                    color="primary"
-                                    startIcon={<FilterIcon />}
-                                >
-                                    Filtros avanzados
-                                </Button>
-                            </Box>
-                        </Grid>
-                    </Grid>
+                            <Button
+                                variant="outlined"
+                                color="primary"
+                                startIcon={<FilterIcon />}
+                            >
+                                Filtros avanzados
+                            </Button>
+                        </Box>
+                    </Stack>
                 </Paper>
 
                 {/* Resumen */}
-                <Grid container spacing={3} sx={{ mb: 3 }}>
-                    <Grid item xs={12} sm={6} md={3}>
+                <Stack direction={{ xs: 'column', sm: 'row' }} spacing={3} sx={{ mb: 3 }}>
+                    <Box flex={1}>
                         <Paper elevation={2} sx={{ p: 2, borderRadius: 2, background: '#fff' }}>
                             <Typography variant="body2" color="text.secondary">
                                 Total productos
@@ -172,8 +172,8 @@ export default function EditProducts() {
                                 {filteredProducts.length}
                             </Typography>
                         </Paper>
-                    </Grid>
-                    <Grid item xs={12} sm={6} md={3}>
+                    </Box>
+                    <Box flex={1}>
                         <Paper elevation={2} sx={{ p: 2, borderRadius: 2, background: '#fff' }}>
                             <Typography variant="body2" color="text.secondary">
                                 Modificados
@@ -182,8 +182,8 @@ export default function EditProducts() {
                                 {productChanges.length}
                             </Typography>
                         </Paper>
-                    </Grid>
-                    <Grid item xs={12} sm={6} md={3}>
+                    </Box>
+                    <Box flex={1}>
                         <Paper elevation={2} sx={{ p: 2, borderRadius: 2, background: '#fff' }}>
                             <Typography variant="body2" color="text.secondary">
                                 Precio promedio
@@ -192,8 +192,8 @@ export default function EditProducts() {
                                 ${precioPromedio.toFixed(2)}
                             </Typography>
                         </Paper>
-                    </Grid>
-                    <Grid item xs={12} sm={6} md={3}>
+                    </Box>
+                    <Box flex={1}>
                         <Paper elevation={2} sx={{ p: 2, borderRadius: 2, background: '#fff' }}>
                             <Typography variant="body2" color="text.secondary">
                                 Inventario total
@@ -202,8 +202,8 @@ export default function EditProducts() {
                                 {totalInventario}
                             </Typography>
                         </Paper>
-                    </Grid>
-                </Grid>
+                    </Box>
+                </Stack>
 
                 {/* Tabla */}
                 <Paper
