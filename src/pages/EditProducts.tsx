@@ -29,6 +29,7 @@ import {
     DialogContent,
     DialogActions,
     Slider,
+    Switch,
 } from '@mui/material';
 import {
     Search as SearchIcon,
@@ -67,7 +68,8 @@ export default function EditProducts() {
                 product.precio_sugerido >= priceRange[0] &&
                 product.precio_sugerido <= priceRange[1];
             const matchesInv =
-                product.inventario_actual >= invRange[0] && product.inventario_actual <= invRange[1];
+                product.inventario_actual >= invRange[0] &&
+                product.inventario_actual <= invRange[1];
             return matchesSearch && matchesEditFilter && matchesPrice && matchesInv;
         });
     }, [products, searchTerm, showOnlyEdited, priceRange, invRange]);
@@ -151,15 +153,34 @@ export default function EditProducts() {
                                     variant="outlined"
                                     size="small"
                                 />
-                                <Button
-                                    variant={showOnlyEdited ? 'contained' : 'outlined'}
-                                    color="primary"
-                                    onClick={() => setShowOnlyEdited((v) => !v)}
-                                    startIcon={<EditIcon />}
-                                    sx={{ whiteSpace: 'nowrap' }}
+                                {/* Switch para mostrar solo editados */}
+                                <Box
+                                    sx={{ display: 'flex', alignItems: 'center', gap: 1.5, pl: 1 }}
                                 >
-                                    {showOnlyEdited ? 'Ver todos' : 'Solo editados'}
-                                </Button>
+                                    <Switch
+                                        checked={showOnlyEdited}
+                                        onChange={() => setShowOnlyEdited((v) => !v)}
+                                        color="warning"
+                                        inputProps={{
+                                            'aria-label': 'Mostrar solo productos editados',
+                                        }}
+                                        sx={{
+                                            '& .MuiSwitch-thumb': {
+                                                boxShadow: '0 2px 8px rgba(255,193,7,0.18)',
+                                            },
+                                            '& .Mui-checked': {
+                                                color: theme.palette.warning.main,
+                                            },
+                                        }}
+                                    />
+                                    <Typography
+                                        variant="body2"
+                                        color={showOnlyEdited ? 'warning.main' : 'text.secondary'}
+                                        fontWeight={600}
+                                    >
+                                        Solo editados
+                                    </Typography>
+                                </Box>
                             </Box>
                         </Box>
                         <Box
@@ -170,7 +191,7 @@ export default function EditProducts() {
                                 width: { xs: '100%', md: 'auto' },
                             }}
                         >
-                            {/* Botón de filtros avanzados más simple */}
+                            {/* Botón de filtros avanzados */}
                             <Button
                                 variant="outlined"
                                 color="primary"
