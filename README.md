@@ -140,6 +140,14 @@ git clone https://github.com/Andrik0711/kladi-reto.git
 cd kladi-reto
 ```
 
+### 2. Instala Material UI (MUI) y otras dependencias
+
+```bash
+npm install @mui/material @emotion/react @emotion/styled
+npm install @mui/icons-material
+npm install axios react-router-dom
+```
+
 ### 2. Instala las dependencias
 
 ```bash
