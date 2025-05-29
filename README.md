@@ -5,6 +5,7 @@
 ## 🧱 FASE 1: ESTRUCTURA DEL PROYECTO
 
 ### ✅ Tecnologías y herramientas sugeridas
+
 - **Frontend:** React + TypeScript
 - **Framework de UI:** Material UI
 - **Gestión de estado:** Context API
@@ -14,13 +15,16 @@
 - **Formateo y Lint:** Prettier + ESLint
 
 **Extras (puntos extra):**
+
 <!-- - SSR con Next.js  -->
+
 - Deploy en Netlify
 - Pruebas unitarias con Vitest o Jest
 
 ---
 
 ## 🧩 FASE 2: CONSUMO DE LA API
+
 - 🌐 API externa: Se consume el catálogo de productos desde una API abierta de Kladi.
 
 ---
@@ -28,11 +32,13 @@
 ## 🎨 FASE 3: UI DE VISUALIZACIÓN Y EDICIÓN
 
 ### ✏️ Componentes clave
+
 - **ProductTable** con campos editables (precio e inventario)
 - **Filtros:** por texto, rango de precio, estado de inventario
 - **Botones:** restaurar precios, finalizar
 
 ### 🧮 Lógica clave
+
 - Comparar `precio_actual !== precio_sugerido` o `inventario_actual !== inventario_original` para saber si fue modificado.
 - Campo editable con validación numérica.
 
@@ -41,11 +47,13 @@
 ## ✅ FASE 4: PANTALLA DE RESUMEN Y GUARDADO
 
 ### 📋 Mostrar
+
 - Lista de productos modificados
 - Total de productos modificados
 - Suma del inventario
 
 ### 🧩 Funcionalidad
+
 - Botón "Guardar cambios": muestra modal de éxito.
 - Botón "Regresar": vuelve a pantalla de edición.
 
@@ -54,6 +62,7 @@
 ## 🧪 FASE 5: MEJORAS Y ENVÍO
 
 ### 🏅 Puntos extra
+
 - ✅ SSR con Next.js
 - ✅ Columna y filtro por categoría
 - ✅ Modificación por grupos
@@ -61,12 +70,13 @@
 - ✅ Pruebas unitarias
 
 ### 📤 Deploy y envío
+
 - Publicar en GitHub y desplegar en Netlify.
 - Incluir README con:
-  - Descripción
-  - Instrucciones de instalación
-  - Justificación de decisiones técnicas
-  - Capturas de pantalla
+    - Descripción
+    - Instrucciones de instalación
+    - Justificación de decisiones técnicas
+    - Capturas de pantalla
 
 ---
 
