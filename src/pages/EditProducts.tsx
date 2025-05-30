@@ -63,15 +63,19 @@ export default function EditProducts() {
     const [selectedKeys, setSelectedKeys] = useState<string[]>([]);
     const [massEditField, setMassEditField] = useState<'precio' | 'inventario' | ''>('');
     const [massEditValue, setMassEditValue] = useState<number>(0);
-    const [massEditTarget, setMassEditTarget] = useState<'seleccion' | 'categoria' | 'marca'>('seleccion');
+    const [massEditTarget, setMassEditTarget] = useState<'seleccion' | 'categoria' | 'marca'>(
+        'seleccion',
+    );
     const [massEditCategory, setMassEditCategory] = useState<string>('');
     const [massEditBrand, setMassEditBrand] = useState<string>('');
 
     // Encuentra los valores min/max para sliders
     const minPrecio = products.length > 0 ? Math.min(...products.map((p) => p.precio_sugerido)) : 0;
-    const maxPrecio = products.length > 0 ? Math.max(...products.map((p) => p.precio_sugerido)) : 1000;
+    const maxPrecio =
+        products.length > 0 ? Math.max(...products.map((p) => p.precio_sugerido)) : 1000;
     const minInv = products.length > 0 ? Math.min(...products.map((p) => p.inventario_actual)) : 0;
-    const maxInv = products.length > 0 ? Math.max(...products.map((p) => p.inventario_actual)) : 100;
+    const maxInv =
+        products.length > 0 ? Math.max(...products.map((p) => p.inventario_actual)) : 100;
 
     // Ajustar el estado inicial de los sliders al cargar productos
     useEffect(() => {
@@ -153,13 +157,17 @@ export default function EditProducts() {
                     return {
                         ...product,
                         precio_actual: massEditValue,
-                        modificado: massEditValue !== product.precio_sugerido || product.inventario_actual !== product.inventario_original,
+                        modificado:
+                            massEditValue !== product.precio_sugerido ||
+                            product.inventario_actual !== product.inventario_original,
                     };
                 } else if (massEditField === 'inventario') {
                     return {
                         ...product,
                         inventario_actual: massEditValue,
-                        modificado: product.precio_actual !== product.precio_sugerido || massEditValue !== product.inventario_original,
+                        modificado:
+                            product.precio_actual !== product.precio_sugerido ||
+                            massEditValue !== product.inventario_original,
                     };
                 }
                 return product;
@@ -341,7 +349,9 @@ export default function EditProducts() {
                             <Select
                                 value={massEditField}
                                 label="Campo a editar"
-                                onChange={(e) => setMassEditField(e.target.value as 'precio' | 'inventario' | '')}
+                                onChange={(e) =>
+                                    setMassEditField(e.target.value as 'precio' | 'inventario' | '')
+                                }
                             >
                                 <MenuItem value="precio">Precio</MenuItem>
                                 <MenuItem value="inventario">Inventario</MenuItem>
@@ -361,7 +371,11 @@ export default function EditProducts() {
                             <Select
                                 value={massEditTarget}
                                 label="Aplicar a"
-                                onChange={(e) => setMassEditTarget(e.target.value as 'seleccion' | 'categoria' | 'marca')}
+                                onChange={(e) =>
+                                    setMassEditTarget(
+                                        e.target.value as 'seleccion' | 'categoria' | 'marca',
+                                    )
+                                }
                             >
                                 <MenuItem value="seleccion">Selección</MenuItem>
                                 <MenuItem value="categoria">Categoría</MenuItem>
@@ -376,8 +390,12 @@ export default function EditProducts() {
                                     label="Categoría"
                                     onChange={(e) => setMassEditCategory(e.target.value as string)}
                                 >
-                                    {Array.from(new Set(products.map((p) => p.categoria).filter(Boolean))).map((cat) => (
-                                        <MenuItem key={cat} value={cat}>{cat}</MenuItem>
+                                    {Array.from(
+                                        new Set(products.map((p) => p.categoria).filter(Boolean)),
+                                    ).map((cat) => (
+                                        <MenuItem key={cat} value={cat}>
+                                            {cat}
+                                        </MenuItem>
                                     ))}
                                 </Select>
                             </FormControl>
@@ -390,8 +408,12 @@ export default function EditProducts() {
                                     label="Marca"
                                     onChange={(e) => setMassEditBrand(e.target.value as string)}
                                 >
-                                    {Array.from(new Set(products.map((p) => p.marca).filter(Boolean))).map((marca) => (
-                                        <MenuItem key={marca} value={marca}>{marca}</MenuItem>
+                                    {Array.from(
+                                        new Set(products.map((p) => p.marca).filter(Boolean)),
+                                    ).map((marca) => (
+                                        <MenuItem key={marca} value={marca}>
+                                            {marca}
+                                        </MenuItem>
                                     ))}
                                 </Select>
                             </FormControl>
@@ -442,7 +464,9 @@ export default function EditProducts() {
                                             }
                                             onChange={(e) => {
                                                 if (e.target.checked) {
-                                                    setSelectedKeys(paginatedProducts.map((p) => p.key_unique));
+                                                    setSelectedKeys(
+                                                        paginatedProducts.map((p) => p.key_unique),
+                                                    );
                                                 } else {
                                                     setSelectedKeys([]);
                                                 }
@@ -468,7 +492,9 @@ export default function EditProducts() {
                                 {paginatedProducts.map((product) => (
                                     <TableRow
                                         key={product.key_unique}
-                                        sx={{ '&:hover': { backgroundColor: 'rgba(0, 0, 0, 0.04)' } }}
+                                        sx={{
+                                            '&:hover': { backgroundColor: 'rgba(0, 0, 0, 0.04)' },
+                                        }}
                                     >
                                         {/* NUEVO: Checkbox de selección individual */}
                                         <TableCell padding="checkbox">
@@ -476,22 +502,41 @@ export default function EditProducts() {
                                                 checked={selectedKeys.includes(product.key_unique)}
                                                 onChange={(e) => {
                                                     if (e.target.checked) {
-                                                        setSelectedKeys([...selectedKeys, product.key_unique]);
+                                                        setSelectedKeys([
+                                                            ...selectedKeys,
+                                                            product.key_unique,
+                                                        ]);
                                                     } else {
-                                                        setSelectedKeys(selectedKeys.filter((k) => k !== product.key_unique));
+                                                        setSelectedKeys(
+                                                            selectedKeys.filter(
+                                                                (k) => k !== product.key_unique,
+                                                            ),
+                                                        );
                                                     }
                                                 }}
-                                                inputProps={{ 'aria-label': `Seleccionar ${product.nombre}` }}
+                                                inputProps={{
+                                                    'aria-label': `Seleccionar ${product.nombre}`,
+                                                }}
                                             />
                                         </TableCell>
                                         {/* ...existing columns... */}
-                                        <TableCell component="th" scope="row" sx={{ fontWeight: 'medium' }}>
+                                        <TableCell
+                                            component="th"
+                                            scope="row"
+                                            sx={{ fontWeight: 'medium' }}
+                                        >
                                             {product.nombre}
                                         </TableCell>
                                         <TableCell>
-                                            <Chip label={product.categoria} size="small" sx={{ backgroundColor: 'rgba(0, 0, 0, 0.08)' }} />
+                                            <Chip
+                                                label={product.categoria}
+                                                size="small"
+                                                sx={{ backgroundColor: 'rgba(0, 0, 0, 0.08)' }}
+                                            />
                                         </TableCell>
-                                        <TableCell sx={{ color: 'text.secondary' }}>{product.marca}</TableCell>
+                                        <TableCell sx={{ color: 'text.secondary' }}>
+                                            {product.marca}
+                                        </TableCell>
                                         <TableCell sx={{ fontFamily: 'monospace' }}>
                                             ${product.precio_sugerido.toFixed(2)}
                                         </TableCell>
@@ -500,13 +545,18 @@ export default function EditProducts() {
                                                 type="number"
                                                 value={product.precio_actual}
                                                 onChange={(e) =>
-                                                    handlePriceChange(product.key_unique, e.target.value)
+                                                    handlePriceChange(
+                                                        product.key_unique,
+                                                        e.target.value,
+                                                    )
                                                 }
                                                 variant="outlined"
                                                 size="small"
                                                 InputProps={{
                                                     startAdornment: (
-                                                        <InputAdornment position="start">$</InputAdornment>
+                                                        <InputAdornment position="start">
+                                                            $
+                                                        </InputAdornment>
                                                     ),
                                                 }}
                                                 sx={{ width: 120, fontFamily: 'monospace' }}
@@ -526,8 +576,10 @@ export default function EditProducts() {
                                                                       ...p,
                                                                       inventario_actual: newInv,
                                                                       modificado:
-                                                                          product.precio_actual !== product.precio_sugerido ||
-                                                                          newInv !== product.inventario_original,
+                                                                          product.precio_actual !==
+                                                                              product.precio_sugerido ||
+                                                                          newInv !==
+                                                                              product.inventario_original,
                                                                   }
                                                                 : p,
                                                         ),
@@ -547,14 +599,17 @@ export default function EditProducts() {
                                                             width: 32,
                                                             height: 32,
                                                             borderRadius: '50%',
-                                                            backgroundColor: theme.palette.warning.main,
+                                                            backgroundColor:
+                                                                theme.palette.warning.main,
                                                             display: 'flex',
                                                             alignItems: 'center',
                                                             justifyContent: 'center',
                                                             margin: '0 auto',
                                                         }}
                                                     >
-                                                        <EditIcon sx={{ fontSize: 16, color: 'white' }} />
+                                                        <EditIcon
+                                                            sx={{ fontSize: 16, color: 'white' }}
+                                                        />
                                                     </Box>
                                                 </Tooltip>
                                             ) : (
@@ -564,14 +619,21 @@ export default function EditProducts() {
                                                             width: 32,
                                                             height: 32,
                                                             borderRadius: '50%',
-                                                            backgroundColor: theme.palette.success.main,
+                                                            backgroundColor:
+                                                                theme.palette.success.main,
                                                             display: 'flex',
                                                             alignItems: 'center',
                                                             justifyContent: 'center',
                                                             margin: '0 auto',
                                                         }}
                                                     >
-                                                        <EditIcon sx={{ fontSize: 16, color: 'white', opacity: 0.3 }} />
+                                                        <EditIcon
+                                                            sx={{
+                                                                fontSize: 16,
+                                                                color: 'white',
+                                                                opacity: 0.3,
+                                                            }}
+                                                        />
                                                     </Box>
                                                 </Tooltip>
                                             )}
