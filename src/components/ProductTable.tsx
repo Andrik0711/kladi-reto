@@ -1,3 +1,7 @@
+/**
+ * Este hook permite editar en masa los productos seleccionados.
+ * Permite seleccionar productos, aplicar cambios masivos y manejar el estado de edición.
+ */
 import React, { useState, useEffect } from 'react';
 import { DataGrid } from '@mui/x-data-grid';
 import type { GridColDef, GridRenderCellParams } from '@mui/x-data-grid';
