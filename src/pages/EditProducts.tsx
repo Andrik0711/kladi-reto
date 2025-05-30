@@ -1719,7 +1719,15 @@ export default function EditProducts() {
                         },
                     }}
                 >
-                    <Box sx={{ py: 5, display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center' }}>
+                    <Box
+                        sx={{
+                            py: 5,
+                            display: 'flex',
+                            flexDirection: 'column',
+                            alignItems: 'center',
+                            justifyContent: 'center',
+                        }}
+                    >
                         <CheckCircleIcon
                             sx={{
                                 fontSize: 72,
@@ -1733,7 +1741,12 @@ export default function EditProducts() {
                                 },
                             }}
                         />
-                        <Typography variant="h5" fontWeight={700} color="success.main" sx={{ mb: 1 }}>
+                        <Typography
+                            variant="h5"
+                            fontWeight={700}
+                            color="success.main"
+                            sx={{ mb: 1 }}
+                        >
                             ¡Cambios guardados!
                         </Typography>
                         <Typography variant="body1" color="text.secondary" sx={{ mb: 3 }}>

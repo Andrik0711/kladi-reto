@@ -10,6 +10,7 @@ import type { Product } from '../types/Product';
 
 interface ProductTableProps {
     products: Product[];
+    disableLoading?: boolean; // Evita el loading para pruebas
 }
 
 const columns: GridColDef[] = [
@@ -43,11 +44,19 @@ const columns: GridColDef[] = [
     },
 ];
 
-export const ProductTable: React.FC<ProductTableProps> = ({ products }) => {
+export const ProductTable: React.FC<ProductTableProps> = ({ products, disableLoading }) => {
     const [loading, setLoading] = useState(true);
     const [progress, setProgress] = useState(0);
 
     useEffect(() => {
+        // Si disableLoading es true, no muestra el loading y establece el progreso al 100%
+        // Esto para los tests, si se pasa disableLoading como true, no muestra el loading
+        if (disableLoading) {
+            setLoading(false);
+            setProgress(100);
+            return;
+        }
+
         setLoading(true);
         setProgress(0);
         const interval = setInterval(() => {
@@ -61,7 +70,7 @@ export const ProductTable: React.FC<ProductTableProps> = ({ products }) => {
             });
         }, 100);
         return () => clearInterval(interval);
-    }, []);
+    }, [disableLoading]);
 
     if (loading) {
         return (
