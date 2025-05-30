@@ -19,7 +19,7 @@
 <!-- - SSR con Next.js  -->
 
 - Deploy en Netlify
-- Pruebas unitarias con Vitest o Jest
+- Pruebas unitarias con Vitest
 
 ---
 
@@ -113,15 +113,15 @@ kladi-ferreteria/
 ├── src/
 │   ├── __tests__/
 │   │   ├── ProductTable.test.tsx  # Pruebas unitarias de la tabla
-│   │   ├── ProductFilters.test.tsx # Pruebas unitarias de filtros
-│   │   └── SummaryModal.test.tsx   # Pruebas unitarias del modal
+│   │   ├── EditProducts.test.tsx # Pruebas unitarias de filtros
+│   │   ├── MassEditPanel.test.tsx # Pruebas unitarias de la barra de edición masiva
+│   │   └── ProductSummaryPanel.test.tsx   # Pruebas unitarias del modal
 │   ├── api/
 │   │   └── kladiApi.ts         # Cliente Axios para API de Kladi
 │   ├── adapters/
 │   │   └── productAdapters.ts   # Sanitización de datos de productos
 │   ├── components/
 │   │   ├── ProductTable.tsx    # Tabla editable de productos
-│   │   ├── ProductFilters.tsx  # Barra de búsqueda y filtro modificado
 │   │   ├── MassEditPanel.tsx  # Barra de edición masiva
 │   │   └── ProductSummaryPanel.tsx    # Modal de éxito tras guardar
 │   ├── context/
@@ -219,4 +219,79 @@ npm run test:ui      # Ejecuta las pruebas en modo interactivo (UI)
 
 Los archivos de prueba se encuentran en `src/__tests__/` para mantener una arquitectura limpia y escalable.
 
+---
+
+### Capturas de pantalla
+
+#### Pantalla de carga
+![Pantalla de carga](src/images/Screenshot_30-5-2025_121711_kladi-reto-tecnico.netlify.app.jpeg)
+
+#### Pantalla de principal
+![Pantalla de principal](src/images/Screenshot_30-5-2025_121718_kladi-reto-tecnico.netlify.app.jpeg)
+
+#### Pantalla de filtros
+![Pantalla de filtros avanzados](src/images/Screenshot_30-5-2025_12188_kladi-reto-tecnico.netlify.app.jpeg)
+
+#### Pantalla de modal de filtros Avanzados
+![Pantalla de modal de filtros Avanzados](src/images/Screenshot_30-5-2025_123030_kladi-reto-tecnico.netlify.app.jpeg)
+
+#### Pantalla de información de productos
+![Pantalla de información de productos](src/images/Screenshot_30-5-2025_12320_kladi-reto-tecnico.netlify.app.jpeg)
+
+#### Pantalla de edición de productos masiva
+![Pantalla de edición de productos](src/images/Screenshot_30-5-2025_121751_kladi-reto-tecnico.netlify.app.jpeg)
+
+#### Pantalla de tabla de productos
+![Pantalla de tabla de productos](src/images/Screenshot_30-5-2025_121829_kladi-reto-tecnico.netlify.app.jpeg)
+
+#### Pantalla de botones de acción
+![Pantalla de botones de acción](src/images/Screenshot_30-5-2025_12367_kladi-reto-tecnico.netlify.app.jpeg)
+
+#### Pantalla de resumen de productos modificados
+![Pantalla de resumen de productos modificados](src/images/Screenshot_30-5-2025_121911_kladi-reto-tecnico.netlify.app.jpeg)
+
+#### Pantalla de modal de éxito
+![Pantalla de modal de éxito](src/images/Screenshot_30-5-2025_121919_kladi-reto-tecnico.netlify.app.jpeg)
+
+#### Diagrama de flujo del camino del usuario
+
+```mermaid
+    A[Inicio: Pantalla de carga] --> B[Pantalla principal: Visualización de productos]
+    B --> C[Filtros y búsqueda de productos]
+    C --> D[Edición individual o masiva de precio/inventario]
+    D --> E[Marca visual de productos editados]
+    E --> F[Botón: Finalizar/Guardar cambios]
+    F --> G[Pantalla de resumen de productos modificados]
+    G --> H[Confirmar y guardar cambios]
+    H --> I[Modal de éxito]
+    I --> J[Regresar a pantalla principal]
+```
+
+---
+### Producción
+Para desplegar la aplicación en producción, se utilizo Netlify. El sitio está disponible en:
+[https://kladi-reto-tecnico.netlify.app](https://kladi-reto-tecnico.netlify.app)
+
+--- 
+### Justificación de decisiones técnicas y relación con las pantallas
+
+- **Pantalla de carga:** Implementada para mejorar la experiencia del usuario, para que no se vea una tabla vacía mientras se cargan los productos desde la API.
+
+- **Pantalla principal y tabla de productos:** Permite visualizar y editar productos de forma eficiente.
+
+- **Pantallas de filtros y modal de filtros avanzados:** Mejoran la usabilidad permitiendo búsquedas y segmentación de productos.
+
+- **Pantalla de edición masiva:** Permite modificar precios/inventarios por grupos, agilizando la gestión.
+
+- **Pantalla de botones de acción:** Acciones claras para restaurar, guardar o finalizar cambios.
+
+- **Pantalla de resumen de productos modificados:** Muestra un resumen antes de guardar, ayudando a validar los cambios.
+
+- **Pantalla de modal de éxito:** Feedback inmediato tras guardar cambios, mejorando la satisfacción del usuario.
+
+- **Pruebas unitarias:** Todas las pantallas y funcionalidades están cubiertas con pruebas usando Vitest y Testing Library, asegurando calidad y mantenibilidad.
+
+- **Prettier + ESLint:** Garantizan código limpio y consistente en todos los componentes y pantallas.
+
+- **Despliegue en Netlify:** Permite acceso rápido y confiable a la aplicación, facilitando la revisión de todas las pantallas por cualquier usuario.
 ---
