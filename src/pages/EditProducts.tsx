@@ -4,7 +4,7 @@
  * Utiliza el contexto de productos para obtener los datos.
  */
 
-import React, { useState, useMemo } from 'react';
+import React, { useState, useMemo, useEffect } from 'react';
 import {
     Box,
     Typography,
@@ -30,6 +30,11 @@ import {
     DialogActions,
     Slider,
     Switch,
+    Checkbox,
+    FormControl,
+    InputLabel,
+    Select,
+    MenuItem,
 } from '@mui/material';
 import {
     Search as SearchIcon,
@@ -54,11 +59,27 @@ export default function EditProducts() {
     const [invRange, setInvRange] = useState<number[]>([0, 100]);
     const [openSummary, setOpenSummary] = useState(false);
 
+    // NUEVO: Estado para selección múltiple y edición masiva
+    const [selectedKeys, setSelectedKeys] = useState<string[]>([]);
+    const [massEditField, setMassEditField] = useState<'precio' | 'inventario' | ''>('');
+    const [massEditValue, setMassEditValue] = useState<number>(0);
+    const [massEditTarget, setMassEditTarget] = useState<'seleccion' | 'categoria' | 'marca'>('seleccion');
+    const [massEditCategory, setMassEditCategory] = useState<string>('');
+    const [massEditBrand, setMassEditBrand] = useState<string>('');
+
     // Encuentra los valores min/max para sliders
-    const minPrecio = Math.min(...products.map((p) => p.precio_sugerido), 0);
-    const maxPrecio = Math.max(...products.map((p) => p.precio_sugerido), 1000);
-    const minInv = Math.min(...products.map((p) => p.inventario_actual), 0);
-    const maxInv = Math.max(...products.map((p) => p.inventario_actual), 100);
+    const minPrecio = products.length > 0 ? Math.min(...products.map((p) => p.precio_sugerido)) : 0;
+    const maxPrecio = products.length > 0 ? Math.max(...products.map((p) => p.precio_sugerido)) : 1000;
+    const minInv = products.length > 0 ? Math.min(...products.map((p) => p.inventario_actual)) : 0;
+    const maxInv = products.length > 0 ? Math.max(...products.map((p) => p.inventario_actual)) : 100;
+
+    // Ajustar el estado inicial de los sliders al cargar productos
+    useEffect(() => {
+        if (products.length > 0) {
+            setPriceRange([minPrecio, maxPrecio]);
+            setInvRange([minInv, maxInv]);
+        }
+    }, [products.length, minPrecio, maxPrecio, minInv, maxInv]);
 
     // Filtros y búsqueda
     const filteredProducts = useMemo(() => {
@@ -114,6 +135,48 @@ export default function EditProducts() {
             ),
         );
     };
+
+    // NUEVO: Handler para aplicar edición masiva
+    const handleMassEdit = () => {
+        setProducts(
+            products.map((product) => {
+                let match = false;
+                if (massEditTarget === 'seleccion') {
+                    match = selectedKeys.includes(product.key_unique);
+                } else if (massEditTarget === 'categoria') {
+                    match = product.categoria === massEditCategory;
+                } else if (massEditTarget === 'marca') {
+                    match = product.marca === massEditBrand;
+                }
+                if (!match) return product;
+                if (massEditField === 'precio') {
+                    return {
+                        ...product,
+                        precio_actual: massEditValue,
+                        modificado: massEditValue !== product.precio_sugerido || product.inventario_actual !== product.inventario_original,
+                    };
+                } else if (massEditField === 'inventario') {
+                    return {
+                        ...product,
+                        inventario_actual: massEditValue,
+                        modificado: product.precio_actual !== product.precio_sugerido || massEditValue !== product.inventario_original,
+                    };
+                }
+                return product;
+            }),
+        );
+        setMassEditValue(0);
+        setMassEditField('');
+        setMassEditCategory('');
+        setMassEditBrand('');
+        setSelectedKeys([]);
+    };
+
+    // Guardar productos modificados en localStorage cada vez que cambian
+    React.useEffect(() => {
+        const cambios = products.filter((p) => p.modificado);
+        localStorage.setItem('kladi-cambios', JSON.stringify(cambios));
+    }, [products]);
 
     // Guardar cambios en localStorage al confirmar
     const handleConfirmSummary = () => {
@@ -270,6 +333,85 @@ export default function EditProducts() {
                     </Box>
                 </Stack>
 
+                {/* NUEVO: Panel de edición masiva */}
+                <Paper elevation={2} sx={{ p: 2, mb: 2, borderRadius: 2, background: '#fff' }}>
+                    <Stack direction={{ xs: 'column', sm: 'row' }} spacing={2} alignItems="center">
+                        <FormControl size="small" sx={{ minWidth: 140 }}>
+                            <InputLabel>Campo a editar</InputLabel>
+                            <Select
+                                value={massEditField}
+                                label="Campo a editar"
+                                onChange={(e) => setMassEditField(e.target.value as 'precio' | 'inventario' | '')}
+                            >
+                                <MenuItem value="precio">Precio</MenuItem>
+                                <MenuItem value="inventario">Inventario</MenuItem>
+                            </Select>
+                        </FormControl>
+                        <TextField
+                            type="number"
+                            size="small"
+                            label="Nuevo valor"
+                            value={massEditValue}
+                            onChange={(e) => setMassEditValue(Number(e.target.value))}
+                            sx={{ width: 120 }}
+                            disabled={!massEditField}
+                        />
+                        <FormControl size="small" sx={{ minWidth: 140 }}>
+                            <InputLabel>Aplicar a</InputLabel>
+                            <Select
+                                value={massEditTarget}
+                                label="Aplicar a"
+                                onChange={(e) => setMassEditTarget(e.target.value as 'seleccion' | 'categoria' | 'marca')}
+                            >
+                                <MenuItem value="seleccion">Selección</MenuItem>
+                                <MenuItem value="categoria">Categoría</MenuItem>
+                                <MenuItem value="marca">Marca</MenuItem>
+                            </Select>
+                        </FormControl>
+                        {massEditTarget === 'categoria' && (
+                            <FormControl size="small" sx={{ minWidth: 140 }}>
+                                <InputLabel>Categoría</InputLabel>
+                                <Select
+                                    value={massEditCategory}
+                                    label="Categoría"
+                                    onChange={(e) => setMassEditCategory(e.target.value as string)}
+                                >
+                                    {Array.from(new Set(products.map((p) => p.categoria).filter(Boolean))).map((cat) => (
+                                        <MenuItem key={cat} value={cat}>{cat}</MenuItem>
+                                    ))}
+                                </Select>
+                            </FormControl>
+                        )}
+                        {massEditTarget === 'marca' && (
+                            <FormControl size="small" sx={{ minWidth: 140 }}>
+                                <InputLabel>Marca</InputLabel>
+                                <Select
+                                    value={massEditBrand}
+                                    label="Marca"
+                                    onChange={(e) => setMassEditBrand(e.target.value as string)}
+                                >
+                                    {Array.from(new Set(products.map((p) => p.marca).filter(Boolean))).map((marca) => (
+                                        <MenuItem key={marca} value={marca}>{marca}</MenuItem>
+                                    ))}
+                                </Select>
+                            </FormControl>
+                        )}
+                        <Button
+                            variant="contained"
+                            color="primary"
+                            disabled={
+                                !massEditField ||
+                                (massEditTarget === 'seleccion' && selectedKeys.length === 0) ||
+                                (massEditTarget === 'categoria' && !massEditCategory) ||
+                                (massEditTarget === 'marca' && !massEditBrand)
+                            }
+                            onClick={handleMassEdit}
+                        >
+                            Aplicar edición masiva
+                        </Button>
+                    </Stack>
+                </Paper>
+
                 {/* Tabla */}
                 <Paper
                     elevation={3}
@@ -287,8 +429,29 @@ export default function EditProducts() {
                         <Table sx={{ minWidth: 650 }}>
                             <TableHead>
                                 <TableRow sx={{ backgroundColor: 'rgba(0, 0, 0, 0.04)' }}>
+                                    {/* NUEVO: Checkbox de selección múltiple */}
+                                    <TableCell padding="checkbox">
+                                        <Checkbox
+                                            indeterminate={
+                                                selectedKeys.length > 0 &&
+                                                selectedKeys.length < paginatedProducts.length
+                                            }
+                                            checked={
+                                                paginatedProducts.length > 0 &&
+                                                selectedKeys.length === paginatedProducts.length
+                                            }
+                                            onChange={(e) => {
+                                                if (e.target.checked) {
+                                                    setSelectedKeys(paginatedProducts.map((p) => p.key_unique));
+                                                } else {
+                                                    setSelectedKeys([]);
+                                                }
+                                            }}
+                                            inputProps={{ 'aria-label': 'Seleccionar todos' }}
+                                        />
+                                    </TableCell>
+                                    {/* ...existing columns... */}
                                     <TableCell sx={{ fontWeight: 'bold' }}>Nombre</TableCell>
-                                    {/* <TableCell sx={{ fontWeight: 'bold' }}>Clave</TableCell> */}
                                     <TableCell sx={{ fontWeight: 'bold' }}>Categoría</TableCell>
                                     <TableCell sx={{ fontWeight: 'bold' }}>Marca</TableCell>
                                     <TableCell sx={{ fontWeight: 'bold' }}>
@@ -305,28 +468,30 @@ export default function EditProducts() {
                                 {paginatedProducts.map((product) => (
                                     <TableRow
                                         key={product.key_unique}
-                                        sx={{
-                                            '&:hover': { backgroundColor: 'rgba(0, 0, 0, 0.04)' },
-                                        }}
+                                        sx={{ '&:hover': { backgroundColor: 'rgba(0, 0, 0, 0.04)' } }}
                                     >
-                                        <TableCell
-                                            component="th"
-                                            scope="row"
-                                            sx={{ fontWeight: 'medium' }}
-                                        >
-                                            {product.nombre}
-                                        </TableCell>
-                                        {/* <TableCell>{product.clave}</TableCell> */}
-                                        <TableCell>
-                                            <Chip
-                                                label={product.categoria}
-                                                size="small"
-                                                sx={{ backgroundColor: 'rgba(0, 0, 0, 0.08)' }}
+                                        {/* NUEVO: Checkbox de selección individual */}
+                                        <TableCell padding="checkbox">
+                                            <Checkbox
+                                                checked={selectedKeys.includes(product.key_unique)}
+                                                onChange={(e) => {
+                                                    if (e.target.checked) {
+                                                        setSelectedKeys([...selectedKeys, product.key_unique]);
+                                                    } else {
+                                                        setSelectedKeys(selectedKeys.filter((k) => k !== product.key_unique));
+                                                    }
+                                                }}
+                                                inputProps={{ 'aria-label': `Seleccionar ${product.nombre}` }}
                                             />
                                         </TableCell>
-                                        <TableCell sx={{ color: 'text.secondary' }}>
-                                            {product.marca}
+                                        {/* ...existing columns... */}
+                                        <TableCell component="th" scope="row" sx={{ fontWeight: 'medium' }}>
+                                            {product.nombre}
                                         </TableCell>
+                                        <TableCell>
+                                            <Chip label={product.categoria} size="small" sx={{ backgroundColor: 'rgba(0, 0, 0, 0.08)' }} />
+                                        </TableCell>
+                                        <TableCell sx={{ color: 'text.secondary' }}>{product.marca}</TableCell>
                                         <TableCell sx={{ fontFamily: 'monospace' }}>
                                             ${product.precio_sugerido.toFixed(2)}
                                         </TableCell>
@@ -335,18 +500,13 @@ export default function EditProducts() {
                                                 type="number"
                                                 value={product.precio_actual}
                                                 onChange={(e) =>
-                                                    handlePriceChange(
-                                                        product.key_unique,
-                                                        e.target.value,
-                                                    )
+                                                    handlePriceChange(product.key_unique, e.target.value)
                                                 }
                                                 variant="outlined"
                                                 size="small"
                                                 InputProps={{
                                                     startAdornment: (
-                                                        <InputAdornment position="start">
-                                                            $
-                                                        </InputAdornment>
+                                                        <InputAdornment position="start">$</InputAdornment>
                                                     ),
                                                 }}
                                                 sx={{ width: 120, fontFamily: 'monospace' }}
@@ -366,10 +526,8 @@ export default function EditProducts() {
                                                                       ...p,
                                                                       inventario_actual: newInv,
                                                                       modificado:
-                                                                          product.precio_actual !==
-                                                                              product.precio_sugerido ||
-                                                                          newInv !==
-                                                                              product.inventario_original,
+                                                                          product.precio_actual !== product.precio_sugerido ||
+                                                                          newInv !== product.inventario_original,
                                                                   }
                                                                 : p,
                                                         ),
@@ -389,17 +547,14 @@ export default function EditProducts() {
                                                             width: 32,
                                                             height: 32,
                                                             borderRadius: '50%',
-                                                            backgroundColor:
-                                                                theme.palette.warning.main,
+                                                            backgroundColor: theme.palette.warning.main,
                                                             display: 'flex',
                                                             alignItems: 'center',
                                                             justifyContent: 'center',
                                                             margin: '0 auto',
                                                         }}
                                                     >
-                                                        <EditIcon
-                                                            sx={{ fontSize: 16, color: 'white' }}
-                                                        />
+                                                        <EditIcon sx={{ fontSize: 16, color: 'white' }} />
                                                     </Box>
                                                 </Tooltip>
                                             ) : (
@@ -409,21 +564,14 @@ export default function EditProducts() {
                                                             width: 32,
                                                             height: 32,
                                                             borderRadius: '50%',
-                                                            backgroundColor:
-                                                                theme.palette.success.main,
+                                                            backgroundColor: theme.palette.success.main,
                                                             display: 'flex',
                                                             alignItems: 'center',
                                                             justifyContent: 'center',
                                                             margin: '0 auto',
                                                         }}
                                                     >
-                                                        <EditIcon
-                                                            sx={{
-                                                                fontSize: 16,
-                                                                color: 'white',
-                                                                opacity: 0.3,
-                                                            }}
-                                                        />
+                                                        <EditIcon sx={{ fontSize: 16, color: 'white', opacity: 0.3 }} />
                                                     </Box>
                                                 </Tooltip>
                                             )}
