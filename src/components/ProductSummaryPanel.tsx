@@ -5,7 +5,7 @@
  */
 
 import React from 'react';
-import Grid from '@mui/material/Grid';
+import GridLegacy from '@mui/material/GridLegacy';
 import Paper from '@mui/material/Paper';
 import Typography from '@mui/material/Typography';
 
@@ -25,8 +25,8 @@ const ProductSummaryPanel: React.FC<ProductSummaryPanelProps> = ({
     colorPrimary,
     colorAccent,
 }) => (
-    <Grid container spacing={2} mb={2}>
-        <Grid item xs={12} sm={4}>
+    <GridLegacy container spacing={2} sx={{ mb: 2 }}>
+        <GridLegacy item xs={12} sm={4}>
             <Paper
                 elevation={2}
                 sx={{ p: 2, bgcolor: colorPrimary, color: '#fff', borderRadius: 3 }}
@@ -36,8 +36,8 @@ const ProductSummaryPanel: React.FC<ProductSummaryPanelProps> = ({
                     {total}
                 </Typography>
             </Paper>
-        </Grid>
-        <Grid item xs={12} sm={4}>
+        </GridLegacy>
+        <GridLegacy item xs={12} sm={4}>
             <Paper
                 elevation={2}
                 sx={{ p: 2, bgcolor: colorAccent, color: '#fff', borderRadius: 3 }}
@@ -47,16 +47,16 @@ const ProductSummaryPanel: React.FC<ProductSummaryPanelProps> = ({
                     {edited}
                 </Typography>
             </Paper>
-        </Grid>
-        <Grid item xs={12} sm={4}>
+        </GridLegacy>
+        <GridLegacy item xs={12} sm={4}>
             <Paper elevation={2} sx={{ p: 2, bgcolor: 'grey.900', color: '#fff', borderRadius: 3 }}>
                 <Typography variant="subtitle2">Filtrados</Typography>
                 <Typography variant="h5" fontWeight={700}>
                     {filtered}
                 </Typography>
             </Paper>
-        </Grid>
-    </Grid>
+        </GridLegacy>
+    </GridLegacy>
 );
 
 export default ProductSummaryPanel;
