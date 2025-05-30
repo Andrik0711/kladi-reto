@@ -35,6 +35,7 @@ import {
     InputLabel,
     Select,
     MenuItem,
+    LinearProgress,
 } from '@mui/material';
 import {
     Search as SearchIcon,
@@ -68,6 +69,31 @@ export default function EditProducts() {
     );
     const [massEditCategory, setMassEditCategory] = useState<string>('');
     const [massEditBrand, setMassEditBrand] = useState<string>('');
+
+    // Estado de carga
+    const [loading, setLoading] = useState(true);
+    const [progress, setProgress] = useState(0);
+
+    // Simular progreso de carga
+    useEffect(() => {
+        if (!loading) return;
+        setProgress(0);
+        const interval = setInterval(() => {
+            setProgress((prev) => {
+                if (prev >= 90) return prev; // No pasar de 90% hasta que productos estén listos
+                return prev + 5;
+            });
+        }, 80);
+        return () => clearInterval(interval);
+    }, [loading]);
+
+    // Detectar cuando los productos ya están cargados
+    useEffect(() => {
+        if (products.length > 0) {
+            setProgress(100);
+            setTimeout(() => setLoading(false), 300); // Pequeño delay para UX
+        }
+    }, [products.length]);
 
     // Encuentra los valores min/max para sliders
     const minPrecio = products.length > 0 ? Math.min(...products.map((p) => p.precio_sugerido)) : 0;
@@ -203,6 +229,74 @@ export default function EditProducts() {
             });
         };
     }, []);
+
+    // Pantalla de carga
+    if (loading) {
+        return (
+            <Box
+                sx={{
+                    position: 'fixed',
+                    top: 0,
+                    left: 0,
+                    width: '100vw',
+                    height: '100vh',
+                    zIndex: 2000,
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    background: 'linear-gradient(135deg, #e3f2fd 0%, #ffffff 50%, #f3e5f5 100%)',
+                }}
+            >
+                <Paper
+                    elevation={6}
+                    sx={{
+                        width: 400,
+                        p: 4,
+                        textAlign: 'center',
+                        borderRadius: 2,
+                        background: 'rgba(255, 255, 255, 0.8)',
+                        backdropFilter: 'blur(10px)',
+                    }}
+                >
+                    <Box sx={{ display: 'flex', justifyContent: 'center', mb: 3 }}>
+                        <Box
+                            sx={{
+                                width: 64,
+                                height: 64,
+                                borderRadius: '50%',
+                                background: 'linear-gradient(135deg, #2196f3 0%, #673ab7 100%)',
+                                display: 'flex',
+                                alignItems: 'center',
+                                justifyContent: 'center',
+                            }}
+                        >
+                            <span
+                                role="img"
+                                aria-label="inventory"
+                                style={{
+                                    fontSize: 32,
+                                    color: 'white',
+                                    animation: 'pulse 2s infinite',
+                                }}
+                            >
+                                📦
+                            </span>
+                        </Box>
+                    </Box>
+                    <Typography variant="h5" component="h2" fontWeight="bold" sx={{ mb: 1 }}>
+                        Cargando productos
+                    </Typography>
+                    <Typography variant="body2" color="text.secondary" sx={{ mb: 3 }}>
+                        Preparando la interfaz de gestión de productos...
+                    </Typography>
+                    <LinearProgress variant="determinate" value={progress} />
+                    <Typography variant="body2" color="text.secondary" sx={{ mt: 1 }}>
+                        {progress}% Completado
+                    </Typography>
+                </Paper>
+            </Box>
+        );
+    }
 
     return (
         <Box
