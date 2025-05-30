@@ -122,14 +122,20 @@ kladi-ferreteria/
 │   ├── components/
 │   │   ├── ProductTable.tsx    # Tabla editable de productos
 │   │   ├── ProductFilters.tsx  # Barra de búsqueda y filtro modificado
-│   │   └── SummaryModal.tsx    # Modal de éxito tras guardar
+│   │   ├── MassEditPanel.tsx  # Barra de edición masiva
+│   │   └── ProductSummaryPanel.tsx    # Modal de éxito tras guardar
 │   ├── context/
 │   │   └── ProductContext.tsx  # Estado global de productos
+│   ├── hooks/
+│   │   ├── useProductFilters.ts # Hook para acceder al contexto de filtros de productos
+│   │   ├── useProductSummary.ts # Hook para acceder al contexto de resumen de productos
+│   │   └── useMassEdit.ts       # Hook para acceder al contexto de edición masiva
 │   ├── pages/
 │   │   ├── EditProducts.tsx    # Pantalla principal (edición)
-│   │   └── Summary.tsx         # Pantalla resumen de cambios
 │   ├── types/
 │   │   └── Product.ts          # Tipado del modelo de producto
+│   ├── utils/
+│   │   └── randomint.ts        # Generador de números aleatorios
 │   ├── App.tsx                 # Rutas y layout
 │   ├── main.tsx                # Entrada principal + Theme MUI
 │   └── ...

@@ -22,7 +22,6 @@ export function useProductFilters(products: Product[]) {
             setPriceRange([minPrecio, maxPrecio]);
             setInvRange([minInv, maxInv]);
         }
-        // eslint-disable-next-line
     }, [products.length, minPrecio, maxPrecio, minInv, maxInv]);
 
     const filteredProducts = useMemo(() => {
