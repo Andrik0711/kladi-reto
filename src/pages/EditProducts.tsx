@@ -42,6 +42,7 @@ import {
     FilterList as FilterIcon,
     Edit as EditIcon,
     Info as InfoIcon,
+    CheckCircle as CheckCircleIcon,
     // ListOutlined as ListIcon,
 } from '@mui/icons-material';
 import CloseIcon from '@mui/icons-material/Close';
@@ -78,6 +79,7 @@ export default function EditProducts() {
     const [priceRange, setPriceRange] = useState<number[]>([0, 1000]);
     const [invRange, setInvRange] = useState<number[]>([0, 100]);
     const [openSummary, setOpenSummary] = useState(false);
+    const [openSuccess, setOpenSuccess] = useState(false);
 
     // NUEVO: Estado para selección múltiple y edición masiva
     const [selectedKeys, setSelectedKeys] = useState<string[]>([]);
@@ -116,7 +118,7 @@ export default function EditProducts() {
     useEffect(() => {
         if (products.length > 0) {
             setProgress(100);
-            setTimeout(() => setLoading(false), 300); // Pequeño delay para UX
+            setTimeout(() => setLoading(false), 500); // Pequeño delay para UX
         }
     }, [products.length]);
 
@@ -261,6 +263,7 @@ export default function EditProducts() {
     const handleConfirmSummary = () => {
         localStorage.setItem('kladi-cambios', JSON.stringify(productChanges));
         setOpenSummary(false);
+        setTimeout(() => setOpenSuccess(true), 300); // Pequeño delay para UX
     };
 
     // Limpiar localStorage al recargar
@@ -1697,6 +1700,54 @@ export default function EditProducts() {
                             Confirmar
                         </Button>
                     </DialogActions>
+                </Dialog>
+
+                {/* Modal de alerta de éxito */}
+                <Dialog
+                    open={openSuccess}
+                    onClose={() => setOpenSuccess(false)}
+                    maxWidth="xs"
+                    fullWidth
+                    PaperProps={{
+                        sx: {
+                            background: 'rgba(255,255,255,0.95)',
+                            backdropFilter: 'blur(10px)',
+                            borderRadius: 4,
+                            boxShadow: '0 8px 32px 0 rgba(33, 150, 243, 0.18)',
+                            border: '1px solid rgba(33,150,243,0.12)',
+                            textAlign: 'center',
+                        },
+                    }}
+                >
+                    <Box sx={{ py: 5, display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center' }}>
+                        <CheckCircleIcon
+                            sx={{
+                                fontSize: 72,
+                                color: 'success.main',
+                                mb: 2,
+                                animation: 'pop 0.5s cubic-bezier(.36,2,.6,1.2)',
+                                '@keyframes pop': {
+                                    '0%': { transform: 'scale(0.5)', opacity: 0 },
+                                    '80%': { transform: 'scale(1.15)', opacity: 1 },
+                                    '100%': { transform: 'scale(1)', opacity: 1 },
+                                },
+                            }}
+                        />
+                        <Typography variant="h5" fontWeight={700} color="success.main" sx={{ mb: 1 }}>
+                            ¡Cambios guardados!
+                        </Typography>
+                        <Typography variant="body1" color="text.secondary" sx={{ mb: 3 }}>
+                            Todos los cambios han sido confirmados y almacenados correctamente.
+                        </Typography>
+                        <Button
+                            variant="contained"
+                            color="success"
+                            sx={{ borderRadius: 2, fontWeight: 600, px: 4 }}
+                            onClick={() => setOpenSuccess(false)}
+                        >
+                            Cerrar
+                        </Button>
+                    </Box>
                 </Dialog>
             </Container>
         </Box>
