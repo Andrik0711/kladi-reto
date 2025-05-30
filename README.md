@@ -253,9 +253,10 @@ Los archivos de prueba se encuentran en `src/__tests__/` para mantener una arqui
 #### Pantalla de modal de éxito
 ![Pantalla de modal de éxito](src/images/Screenshot_30-5-2025_121919_kladi-reto-tecnico.netlify.app.jpeg)
 
-#### Diagrama de flujo del camino del usuario
+#### 🧭 Diagrama de flujo del camino del usuario
 
 ```mermaid
+flowchart TD
     A[Inicio: Pantalla de carga] --> B[Pantalla principal: Visualización de productos]
     B --> C[Filtros y búsqueda de productos]
     C --> D[Edición individual o masiva de precio/inventario]
