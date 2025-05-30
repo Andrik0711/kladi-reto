@@ -93,6 +93,12 @@ export default function EditProducts() {
     const [loading, setLoading] = useState(true);
     const [progress, setProgress] = useState(0);
 
+    // Estado y handler para ordenamiento
+    const [orderBy, setOrderBy] = useState<'asc' | 'desc'>('asc');
+    const [orderField, setOrderField] = useState<'nombre' | 'precio_actual' | 'inventario_actual'>(
+        'nombre',
+    );
+
     // Simular progreso de carga
     useEffect(() => {
         if (!loading) return;
@@ -163,6 +169,26 @@ export default function EditProducts() {
     const precioPromedio =
         filteredProducts.reduce((sum, p) => sum + p.precio_actual, 0) /
         (filteredProducts.length || 1);
+
+    // Función de ordenamiento extendida
+    const sortedProducts = [...paginatedProducts].sort((a, b) => {
+        if (orderField === 'nombre') {
+            if (orderBy === 'asc') {
+                return a.nombre.localeCompare(b.nombre, 'es', { sensitivity: 'base' });
+            } else {
+                return b.nombre.localeCompare(a.nombre, 'es', { sensitivity: 'base' });
+            }
+        } else if (orderField === 'precio_actual') {
+            return orderBy === 'asc'
+                ? a.precio_actual - b.precio_actual
+                : b.precio_actual - a.precio_actual;
+        } else if (orderField === 'inventario_actual') {
+            return orderBy === 'asc'
+                ? a.inventario_actual - b.inventario_actual
+                : b.inventario_actual - a.inventario_actual;
+        }
+        return 0;
+    });
 
     // Handlers
     const handleChangePage = (_: unknown, newPage: number) => setPage(newPage);
@@ -831,6 +857,7 @@ export default function EditProducts() {
                             }}
                         />
                     </Box>
+
                     <TableContainer
                         sx={{
                             background: COLOR_WHITE,
@@ -846,12 +873,13 @@ export default function EditProducts() {
                                     boxShadow: '0 2px 8px 0 rgba(33,150,243,0.10)',
                                     borderBottom: '2px solid #90caf9',
                                     '& th': {
-                                        background: 'transparent',
+                                        background: 'white',
                                         color: COLOR_TABLE_HEADER_TEXT,
                                         fontWeight: 'bold',
                                         fontSize: 17,
                                         letterSpacing: 0.5,
                                         border: 'none',
+                                        cursor: 'default', // ya no es pointer
                                     },
                                 }}
                             >
@@ -876,13 +904,53 @@ export default function EditProducts() {
                                                 }
                                             }}
                                             inputProps={{ 'aria-label': 'Seleccionar todos' }}
-                                            sx={{ color: 'white' }}
+                                            sx={{ color: 'blue' }}
                                         />
                                     </TableCell>
                                     <TableCell
-                                        sx={{ fontWeight: 'bold', color: 'white', fontSize: 17 }}
+                                        sx={{
+                                            fontWeight: 'bold',
+                                            color: 'white',
+                                            fontSize: 17,
+                                            cursor: 'pointer',
+                                            userSelect: 'none',
+                                        }}
+                                        onClick={() => {
+                                            setOrderField('nombre');
+                                            setOrderBy((prev) =>
+                                                orderField === 'nombre'
+                                                    ? prev === 'asc'
+                                                        ? 'desc'
+                                                        : 'asc'
+                                                    : 'asc',
+                                            );
+                                        }}
                                     >
-                                        Nombre
+                                        <Box
+                                            sx={{
+                                                display: 'flex',
+                                                alignItems: 'center',
+                                                justifyContent: 'center',
+                                                gap: 1,
+                                            }}
+                                        >
+                                            Nombre
+                                            <span
+                                                style={{
+                                                    fontSize: 16,
+                                                    marginLeft: 2,
+                                                    color:
+                                                        orderField === 'nombre'
+                                                            ? '#2196f3'
+                                                            : '#b0b0b0',
+                                                    transition: 'color 0.2s',
+                                                }}
+                                            >
+                                                {orderBy === 'asc' && orderField === 'nombre'
+                                                    ? '▲'
+                                                    : '▼'}
+                                            </span>
+                                        </Box>
                                     </TableCell>
                                     <TableCell
                                         sx={{ fontWeight: 'bold', color: 'white', fontSize: 17 }}
@@ -900,14 +968,95 @@ export default function EditProducts() {
                                         Precio sugerido
                                     </TableCell>
                                     <TableCell
-                                        sx={{ fontWeight: 'bold', color: 'white', fontSize: 17 }}
+                                        sx={{
+                                            fontWeight: 'bold',
+                                            color: 'white',
+                                            fontSize: 17,
+                                            cursor: 'pointer',
+                                            userSelect: 'none',
+                                        }}
+                                        onClick={() => {
+                                            setOrderField('precio_actual');
+                                            setOrderBy((prev) =>
+                                                orderField === 'precio_actual'
+                                                    ? prev === 'asc'
+                                                        ? 'desc'
+                                                        : 'asc'
+                                                    : 'asc',
+                                            );
+                                        }}
                                     >
-                                        Precio actual
+                                        <Box
+                                            sx={{
+                                                display: 'flex',
+                                                alignItems: 'center',
+                                                justifyContent: 'center',
+                                                gap: 1,
+                                            }}
+                                        >
+                                            Precio actual
+                                            <span
+                                                style={{
+                                                    fontSize: 16,
+                                                    marginLeft: 2,
+                                                    color:
+                                                        orderField === 'precio_actual'
+                                                            ? '#2196f3'
+                                                            : '#b0b0b0',
+                                                    transition: 'color 0.2s',
+                                                }}
+                                            >
+                                                {orderBy === 'asc' && orderField === 'precio_actual'
+                                                    ? '▲'
+                                                    : '▼'}
+                                            </span>
+                                        </Box>
                                     </TableCell>
                                     <TableCell
-                                        sx={{ fontWeight: 'bold', color: 'white', fontSize: 17 }}
+                                        sx={{
+                                            fontWeight: 'bold',
+                                            color: 'white',
+                                            fontSize: 17,
+                                            cursor: 'pointer',
+                                            userSelect: 'none',
+                                        }}
+                                        onClick={() => {
+                                            setOrderField('inventario_actual');
+                                            setOrderBy((prev) =>
+                                                orderField === 'inventario_actual'
+                                                    ? prev === 'asc'
+                                                        ? 'desc'
+                                                        : 'asc'
+                                                    : 'asc',
+                                            );
+                                        }}
                                     >
-                                        Inventario
+                                        <Box
+                                            sx={{
+                                                display: 'flex',
+                                                alignItems: 'center',
+                                                justifyContent: 'center',
+                                                gap: 1,
+                                            }}
+                                        >
+                                            Inventario
+                                            <span
+                                                style={{
+                                                    fontSize: 16,
+                                                    marginLeft: 2,
+                                                    color:
+                                                        orderField === 'inventario_actual'
+                                                            ? '#2196f3'
+                                                            : '#b0b0b0',
+                                                    transition: 'color 0.2s',
+                                                }}
+                                            >
+                                                {orderBy === 'asc' &&
+                                                orderField === 'inventario_actual'
+                                                    ? '▲'
+                                                    : '▼'}
+                                            </span>
+                                        </Box>
                                     </TableCell>
                                     <TableCell
                                         align="center"
@@ -918,7 +1067,7 @@ export default function EditProducts() {
                                 </TableRow>
                             </TableHead>
                             <TableBody>
-                                {paginatedProducts.map((product) => (
+                                {sortedProducts.map((product) => (
                                     <TableRow
                                         key={product.key_unique}
                                         sx={{
