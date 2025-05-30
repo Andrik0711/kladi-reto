@@ -882,7 +882,7 @@ export default function EditProducts() {
                                         fontSize: 17,
                                         letterSpacing: 0.5,
                                         border: 'none',
-                                        cursor: 'default', // ya no es pointer
+                                        cursor: 'default',
                                     },
                                 }}
                             >
@@ -1066,6 +1066,19 @@ export default function EditProducts() {
                                         sx={{ fontWeight: 'bold', color: 'white', fontSize: 17 }}
                                     >
                                         Estado
+                                        <Tooltip title="Estado del producto. El color verde indica que no ha sido modificado, mientras que el color naranja indica que ha sido editado.">
+                                            <Box
+                                                component="span"
+                                                sx={{
+                                                    ml: 1,
+                                                    color: 'info.main',
+                                                    cursor: 'help',
+                                                    fontWeight: 700,
+                                                }}
+                                            >
+                                                ?
+                                            </Box>
+                                        </Tooltip>
                                     </TableCell>
                                 </TableRow>
                             </TableHead>
@@ -1315,6 +1328,7 @@ export default function EditProducts() {
                             bgcolor: 'transparent',
                         }}
                     >
+                        {/* Boton de revertir cambios */}
                         <Button
                             variant="outlined"
                             color="warning"
@@ -1350,6 +1364,7 @@ export default function EditProducts() {
                         >
                             Revertir todos los cambios
                         </Button>
+                        {/* Boton de confirmar cambios */}
                         <Button
                             variant="contained"
                             color="primary"
