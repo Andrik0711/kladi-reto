@@ -6,7 +6,7 @@ export default function App() {
     return (
         <ProductProvider>
             <Router>
-                <Container maxWidth="lg">
+                <Container maxWidth="sm">
                     <Routes>
                         <Route path="/" element={<EditProducts />} />
                     </Routes>

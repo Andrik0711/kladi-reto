@@ -48,6 +48,25 @@ import CloseIcon from '@mui/icons-material/Close';
 import { useProductContext } from '../context/ProductContext';
 import type { Product } from '../types/Product';
 
+// Paleta base
+const COLOR_PRIMARY = '#2196f3'; // azul
+const COLOR_PRIMARY_DARK = '#1565c0';
+const COLOR_ACCENT = '#fffff'; // fondo de filtros y botones
+const COLOR_BG = '#fffff'; // color general
+const COLOR_WHITE = '#fff';
+const COLOR_SUCCESS = '#43a047';
+const COLOR_SUCCESS_BG = '#e8f5e9';
+// const COLOR_WARNING = '#ffb300';
+const COLOR_WARNING_BG = '#fffde7';
+const COLOR_HEADER_BG = COLOR_PRIMARY;
+const COLOR_HEADER_TEXT = COLOR_WHITE;
+const COLOR_TABLE_HEADER_BG = '#e3f2fd';
+const COLOR_TABLE_HEADER_TEXT = COLOR_PRIMARY_DARK;
+const COLOR_CHIP_CAT_BG = COLOR_SUCCESS_BG;
+const COLOR_CHIP_CAT_TEXT = COLOR_SUCCESS;
+const COLOR_CHIP_MARCA_BG = COLOR_TABLE_HEADER_BG;
+const COLOR_CHIP_MARCA_TEXT = COLOR_PRIMARY_DARK;
+
 export default function EditProducts() {
     const theme = useTheme();
     const { products, setProducts } = useProductContext();
@@ -312,9 +331,21 @@ export default function EditProducts() {
                 overflow: 'auto',
             }}
         >
-            <Container maxWidth="xl" disableGutters sx={{ py: 4, bgcolor: 'transparent' }}>
+            <Container
+                maxWidth="lg"
+                disableGutters
+                sx={{ py: 4, bgcolor: 'transparent', maxWidth: 800 }}
+            >
                 {/* Filtros */}
-                <Paper elevation={2} sx={{ p: 3, mb: 3, borderRadius: 2, background: '#fff' }}>
+                <Paper
+                    elevation={2}
+                    sx={{
+                        p: { xs: 2, sm: 3 },
+                        mb: 3,
+                        borderRadius: 2,
+                        background: COLOR_ACCENT,
+                    }}
+                >
                     <Stack direction={{ xs: 'column', md: 'row' }} spacing={2} alignItems="center">
                         <Box flex={1}>
                             <Box
@@ -394,59 +425,205 @@ export default function EditProducts() {
                 {/* Resumen */}
                 <Stack direction={{ xs: 'column', sm: 'row' }} spacing={3} sx={{ mb: 3 }}>
                     <Box flex={1}>
-                        <Paper elevation={2} sx={{ p: 2, borderRadius: 2, background: '#fff' }}>
-                            <Typography variant="body2" color="text.secondary">
-                                Total productos
-                            </Typography>
-                            <Typography variant="h4" fontWeight="bold">
-                                {filteredProducts.length}
-                            </Typography>
+                        <Paper
+                            elevation={3}
+                            sx={{
+                                p: 2.5,
+                                borderRadius: 3,
+                                background: COLOR_TABLE_HEADER_BG,
+                                display: 'flex',
+                                alignItems: 'center',
+                                gap: 2,
+                            }}
+                        >
+                            <Box
+                                sx={{
+                                    width: 44,
+                                    height: 44,
+                                    borderRadius: '50%',
+                                    background: 'linear-gradient(135deg, #2196f3 0%, #90caf9 100%)',
+                                    display: 'flex',
+                                    alignItems: 'center',
+                                    justifyContent: 'center',
+                                    mr: 2,
+                                }}
+                            >
+                                <span role="img" aria-label="productos" style={{ fontSize: 24 }}>
+                                    📦
+                                </span>
+                            </Box>
+                            <Box>
+                                <Typography variant="body2" color="text.secondary" fontWeight={600}>
+                                    Total productos
+                                </Typography>
+                                <Typography variant="h4" fontWeight="bold" color="primary.main">
+                                    {filteredProducts.length}
+                                </Typography>
+                            </Box>
                         </Paper>
                     </Box>
                     <Box flex={1}>
-                        <Paper elevation={2} sx={{ p: 2, borderRadius: 2, background: '#fff' }}>
-                            <Typography variant="body2" color="text.secondary">
-                                Modificados
-                            </Typography>
-                            <Typography variant="h4" fontWeight="bold" color="warning.main">
-                                {productChanges.length}
-                            </Typography>
+                        <Paper
+                            elevation={3}
+                            sx={{
+                                p: 2.5,
+                                borderRadius: 3,
+                                background: COLOR_WARNING_BG,
+                                display: 'flex',
+                                alignItems: 'center',
+                                gap: 2,
+                            }}
+                        >
+                            <Box
+                                sx={{
+                                    width: 44,
+                                    height: 44,
+                                    borderRadius: '50%',
+                                    background: 'linear-gradient(135deg, #ffa751 0%, #fffde7 100%)',
+                                    display: 'flex',
+                                    alignItems: 'center',
+                                    justifyContent: 'center',
+                                    mr: 2,
+                                }}
+                            >
+                                <span role="img" aria-label="modificados" style={{ fontSize: 24 }}>
+                                    ✏️
+                                </span>
+                            </Box>
+                            <Box>
+                                <Typography variant="body2" color="text.secondary" fontWeight={600}>
+                                    Modificados
+                                </Typography>
+                                <Typography variant="h4" fontWeight="bold" color="warning.main">
+                                    {productChanges.length}
+                                </Typography>
+                            </Box>
                         </Paper>
                     </Box>
                     <Box flex={1}>
-                        <Paper elevation={2} sx={{ p: 2, borderRadius: 2, background: '#fff' }}>
-                            <Typography variant="body2" color="text.secondary">
-                                Precio promedio
-                            </Typography>
-                            <Typography variant="h4" fontWeight="bold">
-                                ${precioPromedio.toFixed(2)}
-                            </Typography>
+                        <Paper
+                            elevation={3}
+                            sx={{
+                                p: 2.5,
+                                borderRadius: 3,
+                                background: COLOR_SUCCESS_BG,
+                                display: 'flex',
+                                alignItems: 'center',
+                                gap: 2,
+                            }}
+                        >
+                            <Box
+                                sx={{
+                                    width: 44,
+                                    height: 44,
+                                    borderRadius: '50%',
+                                    background: 'linear-gradient(135deg, #43a047 0%, #a5d6a7 100%)',
+                                    display: 'flex',
+                                    alignItems: 'center',
+                                    justifyContent: 'center',
+                                    mr: 2,
+                                }}
+                            >
+                                <span role="img" aria-label="precio" style={{ fontSize: 24 }}>
+                                    💲
+                                </span>
+                            </Box>
+                            <Box>
+                                <Typography variant="body2" color="text.secondary" fontWeight={600}>
+                                    Precio promedio
+                                </Typography>
+                                <Typography variant="h4" fontWeight="bold" color="success.main">
+                                    ${precioPromedio.toFixed(2)}
+                                </Typography>
+                            </Box>
                         </Paper>
                     </Box>
                     <Box flex={1}>
-                        <Paper elevation={2} sx={{ p: 2, borderRadius: 2, background: '#fff' }}>
-                            <Typography variant="body2" color="text.secondary">
-                                Inventario total
-                            </Typography>
-                            <Typography variant="h4" fontWeight="bold">
-                                {totalInventario}
-                            </Typography>
+                        <Paper
+                            elevation={3}
+                            sx={{
+                                p: 2.5,
+                                borderRadius: 3,
+                                background: '#fff3e0',
+                                display: 'flex',
+                                alignItems: 'center',
+                                gap: 2,
+                            }}
+                        >
+                            <Box
+                                sx={{
+                                    width: 44,
+                                    height: 44,
+                                    borderRadius: '50%',
+                                    background: 'linear-gradient(135deg, #ff7043 0%, #ffccbc 100%)',
+                                    display: 'flex',
+                                    alignItems: 'center',
+                                    justifyContent: 'center',
+                                    mr: 2,
+                                }}
+                            >
+                                <span role="img" aria-label="inventario" style={{ fontSize: 24 }}>
+                                    📊
+                                </span>
+                            </Box>
+                            <Box>
+                                <Typography variant="body2" color="text.secondary" fontWeight={600}>
+                                    Inventario total
+                                </Typography>
+                                <Typography variant="h4" fontWeight="bold" color="secondary.main">
+                                    {totalInventario}
+                                </Typography>
+                            </Box>
                         </Paper>
                     </Box>
                 </Stack>
+                {/* Fin resumen */}
 
                 {/* NUEVO: Panel de edición masiva */}
-                <Paper elevation={2} sx={{ p: 2, mb: 2, borderRadius: 2, background: '#fff' }}>
-                    <Stack direction={{ xs: 'column', sm: 'row' }} spacing={2} alignItems="center">
-                        <FormControl size="small" sx={{ minWidth: 140 }}>
+                <Paper
+                    elevation={3}
+                    sx={{
+                        p: 2.5,
+                        mb: 2,
+                        borderRadius: 3,
+                        background: COLOR_ACCENT,
+                        display: 'flex',
+                        alignItems: 'center',
+                        gap: 2,
+                    }}
+                >
+                    <Box
+                        sx={{
+                            width: 48,
+                            height: 48,
+                            borderRadius: '50%',
+                            background: 'linear-gradient(135deg, #2196f3 0%, #ffa751 100%)',
+                            display: 'flex',
+                            alignItems: 'center',
+                            justifyContent: 'center',
+                            mr: 3,
+                        }}
+                    >
+                        <span role="img" aria-label="edición masiva" style={{ fontSize: 28 }}>
+                            📝
+                        </span>
+                    </Box>
+                    <Stack
+                        direction={{ xs: 'column', sm: 'row' }}
+                        spacing={2}
+                        alignItems="center"
+                        sx={{ flex: 1 }}
+                    >
+                        <FormControl size="small" sx={{ minWidth: 160 }}>
                             <InputLabel>Campo a editar</InputLabel>
                             <Select
                                 value={massEditField}
                                 label="Campo a editar"
                                 onChange={(e) =>
-                                    setMassEditField(e.target.value as 'precio' | 'inventario' | '')
+                                    setMassEditField(e.target.value as '' | 'precio' | 'inventario')
                                 }
                             >
+                                <MenuItem value="">Seleccionar campo</MenuItem>
                                 <MenuItem value="precio">Precio</MenuItem>
                                 <MenuItem value="inventario">Inventario</MenuItem>
                             </Select>
@@ -522,6 +699,14 @@ export default function EditProducts() {
                                 (massEditTarget === 'marca' && !massEditBrand)
                             }
                             onClick={handleMassEdit}
+                            sx={{
+                                fontWeight: 700,
+                                borderRadius: 2,
+                                minWidth: 180,
+                                boxShadow: '0 2px 8px 0 rgba(33,150,243,0.08)',
+                                py: 1.2,
+                            }}
+                            startIcon={<EditIcon />}
                         >
                             Aplicar edición masiva
                         </Button>
@@ -531,21 +716,146 @@ export default function EditProducts() {
                 {/* Tabla */}
                 <Paper
                     elevation={3}
-                    sx={{ borderRadius: 2, overflow: 'hidden', background: '#fff' }}
+                    sx={{
+                        borderRadius: 3,
+                        overflow: 'hidden',
+                        background: COLOR_BG,
+                        boxShadow: '0 4px 24px 0 rgba(33,150,243,0.06)',
+                        mb: 2,
+                    }}
                 >
-                    <Box sx={{ p: 3, pb: 1 }}>
-                        <Typography variant="h5" component="h2" fontWeight="medium" gutterBottom>
-                            Catálogo de productos
-                        </Typography>
-                        <Typography variant="body2" color="text.secondary">
-                            Edita los precios en tiempo real
-                        </Typography>
+                    <Box
+                        sx={{
+                            p: { xs: 2, sm: 3 },
+                            pb: 1,
+                            display: 'flex',
+                            flexDirection: { xs: 'column', sm: 'row' },
+                            alignItems: { xs: 'flex-start', sm: 'center' },
+                            justifyContent: 'space-between',
+                            background: COLOR_HEADER_BG,
+                            borderRadius: { xs: '0 0 20px 20px', sm: '0 0 32px 32px' },
+                            boxShadow: '0 4px 24px 0 rgba(33,150,243,0.10)',
+                            mb: 2,
+                            color: COLOR_HEADER_TEXT,
+                            position: 'relative',
+                            overflow: 'hidden',
+                            gap: { xs: 2, sm: 0 },
+                        }}
+                    >
+                        <Box sx={{ minWidth: 0, flex: 1 }}>
+                            <Typography
+                                variant="h5"
+                                component="h2"
+                                fontWeight="bold"
+                                sx={{
+                                    letterSpacing: 1,
+                                    mb: 0.5,
+                                    textShadow: '0 2px 8px rgba(33,150,243,0.18)',
+                                    fontSize: { xs: 18, sm: 22 },
+                                    whiteSpace: 'pre-line',
+                                    overflow: 'hidden',
+                                    textOverflow: 'ellipsis',
+                                }}
+                            >
+                                <span
+                                    style={{
+                                        display: 'inline-block',
+                                        background: '#ffd3a1',
+                                        color: '#2196f3',
+                                        borderRadius: 12,
+                                        padding: '2px 10px',
+                                        fontWeight: 800,
+                                        fontSize: 18,
+                                        marginRight: 8,
+                                        boxShadow: '0 2px 8px 0 rgba(255,193,7,0.10)',
+                                        maxWidth: '100%',
+                                    }}
+                                >
+                                    Catálogo de productos
+                                </span>
+                            </Typography>
+                            <Typography
+                                variant="body2"
+                                sx={{
+                                    color: '#fff',
+                                    fontWeight: 500,
+                                    textShadow: '0 1px 4px rgba(33,150,243,0.10)',
+                                    fontSize: { xs: 13, sm: 16 },
+                                    whiteSpace: 'pre-line',
+                                    overflow: 'hidden',
+                                    textOverflow: 'ellipsis',
+                                }}
+                            >
+                                Edita los precios en tiempo real
+                            </Typography>
+                        </Box>
+                        <Box
+                            sx={{
+                                display: 'flex',
+                                alignItems: 'center',
+                                gap: 2,
+                                mt: { xs: 2, sm: 0 },
+                            }}
+                        >
+                            <Box
+                                sx={{
+                                    width: { xs: 36, sm: 48 },
+                                    height: { xs: 36, sm: 48 },
+                                    borderRadius: '50%',
+                                    background: '#ffd3a1',
+                                    display: 'flex',
+                                    alignItems: 'center',
+                                    justifyContent: 'center',
+                                    boxShadow: '0 2px 8px 0 rgba(33,150,243,0.10)',
+                                }}
+                            >
+                                <span
+                                    role="img"
+                                    aria-label="catálogo"
+                                    style={{ fontSize: 22, color: '#2196f3' }}
+                                >
+                                    🗂️
+                                </span>
+                            </Box>
+                        </Box>
+                        <Box
+                            sx={{
+                                position: 'absolute',
+                                right: { xs: -30, sm: -60 },
+                                top: { xs: -20, sm: -40 },
+                                width: { xs: 80, sm: 160 },
+                                height: { xs: 80, sm: 160 },
+                                background: 'rgba(255,255,255,0.10)',
+                                borderRadius: '50%',
+                                zIndex: 0,
+                            }}
+                        />
                     </Box>
-                    <TableContainer>
+                    <TableContainer
+                        sx={{
+                            background: COLOR_WHITE,
+                            borderRadius: 4,
+                            boxShadow: '0 4px 24px 0 rgba(33,150,243,0.05)',
+                            overflow: 'hidden',
+                        }}
+                    >
                         <Table sx={{ minWidth: 650 }}>
-                            <TableHead>
-                                <TableRow sx={{ backgroundColor: 'rgba(0, 0, 0, 0.04)' }}>
-                                    {/* NUEVO: Checkbox de selección múltiple */}
+                            <TableHead
+                                sx={{
+                                    background: COLOR_TABLE_HEADER_BG,
+                                    boxShadow: '0 2px 8px 0 rgba(33,150,243,0.10)',
+                                    borderBottom: '2px solid #90caf9',
+                                    '& th': {
+                                        background: 'transparent',
+                                        color: COLOR_TABLE_HEADER_TEXT,
+                                        fontWeight: 'bold',
+                                        fontSize: 17,
+                                        letterSpacing: 0.5,
+                                        border: 'none',
+                                    },
+                                }}
+                            >
+                                <TableRow>
                                     <TableCell padding="checkbox">
                                         <Checkbox
                                             indeterminate={
@@ -566,18 +876,43 @@ export default function EditProducts() {
                                                 }
                                             }}
                                             inputProps={{ 'aria-label': 'Seleccionar todos' }}
+                                            sx={{ color: 'white' }}
                                         />
                                     </TableCell>
-                                    {/* ...existing columns... */}
-                                    <TableCell sx={{ fontWeight: 'bold' }}>Nombre</TableCell>
-                                    <TableCell sx={{ fontWeight: 'bold' }}>Categoría</TableCell>
-                                    <TableCell sx={{ fontWeight: 'bold' }}>Marca</TableCell>
-                                    <TableCell sx={{ fontWeight: 'bold' }}>
+                                    <TableCell
+                                        sx={{ fontWeight: 'bold', color: 'white', fontSize: 17 }}
+                                    >
+                                        Nombre
+                                    </TableCell>
+                                    <TableCell
+                                        sx={{ fontWeight: 'bold', color: 'white', fontSize: 17 }}
+                                    >
+                                        Categoría
+                                    </TableCell>
+                                    <TableCell
+                                        sx={{ fontWeight: 'bold', color: 'white', fontSize: 17 }}
+                                    >
+                                        Marca
+                                    </TableCell>
+                                    <TableCell
+                                        sx={{ fontWeight: 'bold', color: 'white', fontSize: 17 }}
+                                    >
                                         Precio sugerido
                                     </TableCell>
-                                    <TableCell sx={{ fontWeight: 'bold' }}>Precio actual</TableCell>
-                                    <TableCell sx={{ fontWeight: 'bold' }}>Inventario</TableCell>
-                                    <TableCell align="center" sx={{ fontWeight: 'bold' }}>
+                                    <TableCell
+                                        sx={{ fontWeight: 'bold', color: 'white', fontSize: 17 }}
+                                    >
+                                        Precio actual
+                                    </TableCell>
+                                    <TableCell
+                                        sx={{ fontWeight: 'bold', color: 'white', fontSize: 17 }}
+                                    >
+                                        Inventario
+                                    </TableCell>
+                                    <TableCell
+                                        align="center"
+                                        sx={{ fontWeight: 'bold', color: 'white', fontSize: 17 }}
+                                    >
                                         Estado
                                     </TableCell>
                                 </TableRow>
@@ -587,10 +922,20 @@ export default function EditProducts() {
                                     <TableRow
                                         key={product.key_unique}
                                         sx={{
-                                            '&:hover': { backgroundColor: 'rgba(0, 0, 0, 0.04)' },
+                                            background: product.modificado
+                                                ? COLOR_WARNING_BG
+                                                : COLOR_BG,
+                                            boxShadow: product.modificado
+                                                ? '0 2px 8px 0 rgba(255,193,7,0.08)'
+                                                : 'none',
+                                            borderRadius: 3,
+                                            transition: 'box-shadow 0.2s, background 0.2s',
+                                            '&:hover': {
+                                                boxShadow: '0 6px 24px 0 rgba(33,150,243,0.10)',
+                                                background: COLOR_TABLE_HEADER_BG,
+                                            },
                                         }}
                                     >
-                                        {/* NUEVO: Checkbox de selección individual */}
                                         <TableCell padding="checkbox">
                                             <Checkbox
                                                 checked={selectedKeys.includes(product.key_unique)}
@@ -611,13 +956,13 @@ export default function EditProducts() {
                                                 inputProps={{
                                                     'aria-label': `Seleccionar ${product.nombre}`,
                                                 }}
+                                                sx={{ color: '#2196f3' }}
                                             />
                                         </TableCell>
-                                        {/* ...existing columns... */}
                                         <TableCell
                                             component="th"
                                             scope="row"
-                                            sx={{ fontWeight: 'medium' }}
+                                            sx={{ fontWeight: 600, fontSize: 16 }}
                                         >
                                             {product.nombre}
                                         </TableCell>
@@ -625,13 +970,39 @@ export default function EditProducts() {
                                             <Chip
                                                 label={product.categoria}
                                                 size="small"
-                                                sx={{ backgroundColor: 'rgba(0, 0, 0, 0.08)' }}
+                                                sx={{
+                                                    background: COLOR_CHIP_CAT_BG,
+                                                    color: COLOR_CHIP_CAT_TEXT,
+                                                    fontWeight: 700,
+                                                    fontSize: 14,
+                                                    borderRadius: 2,
+                                                    px: 1.5,
+                                                    boxShadow: '0 1px 4px 0 rgba(67,160,71,0.08)',
+                                                }}
                                             />
                                         </TableCell>
-                                        <TableCell sx={{ color: 'text.secondary' }}>
-                                            {product.marca}
+                                        <TableCell>
+                                            <Chip
+                                                label={product.marca}
+                                                size="small"
+                                                sx={{
+                                                    background: COLOR_CHIP_MARCA_BG,
+                                                    color: COLOR_CHIP_MARCA_TEXT,
+                                                    fontWeight: 700,
+                                                    fontSize: 14,
+                                                    borderRadius: 2,
+                                                    px: 1.5,
+                                                    boxShadow: '0 1px 4px 0 rgba(33,150,243,0.08)',
+                                                }}
+                                            />
                                         </TableCell>
-                                        <TableCell sx={{ fontFamily: 'monospace' }}>
+                                        <TableCell
+                                            sx={{
+                                                fontFamily: 'monospace',
+                                                fontSize: 16,
+                                                color: '#2196f3',
+                                            }}
+                                        >
                                             ${product.precio_sugerido.toFixed(2)}
                                         </TableCell>
                                         <TableCell>
@@ -652,8 +1023,18 @@ export default function EditProducts() {
                                                             $
                                                         </InputAdornment>
                                                     ),
+                                                    sx: {
+                                                        background: 'rgba(33,150,243,0.07)',
+                                                        borderRadius: 2,
+                                                        fontFamily: 'monospace',
+                                                        fontSize: 16,
+                                                    },
                                                 }}
-                                                sx={{ width: 120, fontFamily: 'monospace' }}
+                                                sx={{
+                                                    width: 120,
+                                                    fontFamily: 'monospace',
+                                                    fontSize: 16,
+                                                }}
                                                 inputProps={{ step: '0.01', min: '0' }}
                                             />
                                         </TableCell>
@@ -681,56 +1062,63 @@ export default function EditProducts() {
                                                 }}
                                                 variant="outlined"
                                                 size="small"
-                                                sx={{ width: 100, fontFamily: 'monospace' }}
+                                                InputProps={{
+                                                    sx: {
+                                                        background: 'rgba(67,160,71,0.07)',
+                                                        borderRadius: 2,
+                                                        fontFamily: 'monospace',
+                                                        fontSize: 16,
+                                                    },
+                                                }}
+                                                sx={{
+                                                    width: 100,
+                                                    fontFamily: 'monospace',
+                                                    fontSize: 16,
+                                                }}
                                                 inputProps={{ step: '1', min: '0' }}
                                             />
                                         </TableCell>
                                         <TableCell align="center">
-                                            {product.modificado ? (
-                                                <Tooltip title="Modificado">
-                                                    <Box
-                                                        sx={{
-                                                            width: 32,
-                                                            height: 32,
-                                                            borderRadius: '50%',
-                                                            backgroundColor:
-                                                                theme.palette.warning.main,
-                                                            display: 'flex',
-                                                            alignItems: 'center',
-                                                            justifyContent: 'center',
-                                                            margin: '0 auto',
-                                                        }}
-                                                    >
-                                                        <EditIcon
-                                                            sx={{ fontSize: 16, color: 'white' }}
-                                                        />
-                                                    </Box>
-                                                </Tooltip>
-                                            ) : (
-                                                <Tooltip title="Sin cambios">
-                                                    <Box
-                                                        sx={{
-                                                            width: 32,
-                                                            height: 32,
-                                                            borderRadius: '50%',
-                                                            backgroundColor:
-                                                                theme.palette.success.main,
-                                                            display: 'flex',
-                                                            alignItems: 'center',
-                                                            justifyContent: 'center',
-                                                            margin: '0 auto',
-                                                        }}
-                                                    >
-                                                        <EditIcon
-                                                            sx={{
-                                                                fontSize: 16,
-                                                                color: 'white',
-                                                                opacity: 0.3,
-                                                            }}
-                                                        />
-                                                    </Box>
-                                                </Tooltip>
-                                            )}
+                                            <Box
+                                                sx={{
+                                                    width: 32,
+                                                    height: 32,
+                                                    borderRadius: '50%',
+                                                    backgroundColor: product.modificado
+                                                        ? theme.palette.warning.main
+                                                        : theme.palette.success.main,
+                                                    display: 'flex',
+                                                    alignItems: 'center',
+                                                    justifyContent: 'center',
+                                                    margin: '0 auto',
+                                                    boxShadow: product.modificado
+                                                        ? '0 0 12px 0 rgba(255,193,7,0.18)'
+                                                        : '0 0 8px 0 rgba(76,175,80,0.10)',
+                                                    transition: 'background 0.3s, box-shadow 0.3s',
+                                                    animation: product.modificado
+                                                        ? 'pulse 1.2s infinite alternate'
+                                                        : 'none',
+                                                    '@keyframes pulse': {
+                                                        from: {
+                                                            boxShadow:
+                                                                '0 0 12px 0 rgba(255,193,7,0.18)',
+                                                        },
+                                                        to: {
+                                                            boxShadow:
+                                                                '0 0 24px 0 rgba(255,193,7,0.32)',
+                                                        },
+                                                    },
+                                                }}
+                                            >
+                                                <EditIcon
+                                                    sx={{
+                                                        fontSize: 16,
+                                                        color: 'white',
+                                                        opacity: product.modificado ? 1 : 0.3,
+                                                        transition: 'opacity 0.3s',
+                                                    }}
+                                                />
+                                            </Box>
                                         </TableCell>
                                     </TableRow>
                                 ))}
@@ -746,8 +1134,24 @@ export default function EditProducts() {
                         onPageChange={handleChangePage}
                         onRowsPerPageChange={handleChangeRowsPerPage}
                         labelRowsPerPage={<span>Filas por página:</span>}
+                        sx={{
+                            background: 'rgba(255,255,255,0.25)',
+                            backdropFilter: 'blur(6px)',
+                            borderRadius: 3,
+                            boxShadow: '0 2px 8px 0 rgba(33,150,243,0.10)',
+                            my: 2,
+                            '.MuiTablePagination-toolbar': {
+                                fontWeight: 600,
+                                fontSize: 16,
+                            },
+                            '.MuiTablePagination-selectLabel, .MuiTablePagination-displayedRows': {
+                                color: '#2196f3',
+                            },
+                            '.MuiTablePagination-actions button': {
+                                color: '#2196f3',
+                            },
+                        }}
                     />
-                    {/* Botón para revertir todos los cambios */}
                     <Box
                         sx={{
                             display: 'flex',
@@ -766,8 +1170,19 @@ export default function EditProducts() {
                             sx={{
                                 borderRadius: 3,
                                 fontWeight: 700,
-                                px: 4,
-                                boxShadow: '0 2px 8px 0 rgba(31, 38, 135, 0.08)',
+                                px: { xs: 2, sm: 4 },
+                                py: { xs: 1, sm: 1.5 },
+                                fontSize: { xs: 14, sm: 16 },
+                                background: COLOR_ACCENT,
+                                color: COLOR_PRIMARY,
+                                boxShadow: '0 2px 8px 0 rgba(255,193,7,0.18)',
+                                width: { xs: '100%', sm: 'auto' },
+                                mb: { xs: 1, sm: 0 },
+                                transition: 'box-shadow 0.2s, background 0.2s',
+                                '&:hover': {
+                                    background: '#ffe2c2',
+                                    boxShadow: '0 4px 16px 0 rgba(255,193,7,0.22)',
+                                },
                             }}
                             onClick={() => {
                                 setProducts(
@@ -790,8 +1205,18 @@ export default function EditProducts() {
                             sx={{
                                 borderRadius: 3,
                                 fontWeight: 700,
-                                px: 4,
-                                boxShadow: '0 2px 8px 0 rgba(31, 38, 135, 0.10)',
+                                px: { xs: 2, sm: 4 },
+                                py: { xs: 1, sm: 1.5 },
+                                fontSize: { xs: 14, sm: 16 },
+                                background: COLOR_PRIMARY,
+                                color: COLOR_WHITE,
+                                boxShadow: '0 2px 8px 0 rgba(33,150,243,0.18)',
+                                width: { xs: '100%', sm: 'auto' },
+                                transition: 'box-shadow 0.2s, background 0.2s',
+                                '&:hover': {
+                                    background: COLOR_PRIMARY_DARK,
+                                    boxShadow: '0 4px 16px 0 rgba(33,150,243,0.22)',
+                                },
                             }}
                             onClick={() => setOpenSummary(true)}
                             disabled={productChanges.length === 0}
